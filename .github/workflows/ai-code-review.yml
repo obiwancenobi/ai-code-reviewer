@@ -1,0 +1,81 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'AI Model to use for review'
+        required: true
+        default: 'anthropic/claude-3-haiku'
+        type: choice
+        options:
+          - anthropic/claude-3-haiku
+          - openai/gpt-3.5-turbo
+          - openai/gpt-4
+          - google/gemini-pro
+      discord_webhook:
+        description: 'Discord Webhook URL (optional, overrides secret)'
+        required: false
+        type: string
+      actor_role:
+        description: 'Your role/expertise (e.g., Senior Mobile Engineer)'
+        required: false
+        default: 'Senior Software Engineer'
+
+jobs:
+  ai-code-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Discord Notification Start
+        run: node scripts/discord-start.js --webhook_url="${{ inputs.discord_webhook || secrets.DISCORD_WEBHOOK_URL }}" --pr_number="${{ github.event.pull_request.number }}" --pr_title="${{ github.event.pull_request.title }}" --actor_name="${{ github.event.pull_request.user.login }}" --repository="${{ github.repository }}"
+
+      - name: Get Code Changes
+        id: changes
+        run: |
+          # Get changed files with their content
+          CHANGED_FILES_JSON=$(git diff --name-only HEAD~1..HEAD | jq -R -s 'split("\n") | map(select(. != "")) | map({path: ., content: ""})')
+          echo "changed_files=$CHANGED_FILES_JSON" >> $GITHUB_OUTPUT
+
+      - name: Process Code Changes
+        id: processed_changes
+        run: |
+          echo "${{ steps.changes.outputs.changed_files }}" | node scripts/chunk-changes.js > chunks.json
+          CHUNKS=$(cat chunks.json)
+          echo "chunks=$CHUNKS" >> $GITHUB_OUTPUT
+
+      - name: AI Review via OpenRouter
+        id: ai_review
+        run: |
+          MODEL="${{ inputs.model || 'anthropic/claude-3-haiku' }}"
+          ACTOR_ROLE="${{ inputs.actor_role || 'Senior Software Engineer' }}"
+          ACTOR_DATA="{\"name\":\"${{ github.event.pull_request.user.login }}\",\"role\":\"$ACTOR_ROLE\"}"
+
+          echo "${{ steps.processed_changes.outputs.chunks }}" | node scripts/openrouter-review.js --model="$MODEL" --api_key="${{ secrets.OPENROUTER_API_KEY }}" --code_changes=@- --actor_data="$ACTOR_DATA" > review.json
+          REVIEW=$(cat review.json)
+          echo "review=$REVIEW" >> $GITHUB_OUTPUT
+
+      - name: PR Commenting
+        run: |
+          node scripts/comment-pr.js --pr_number="${{ github.event.pull_request.number }}" --repository="${{ github.repository }}" --github_token="${{ secrets.GITHUB_TOKEN }}" --comments="$(cat review.json | jq -r '.comments')"
+
+      - name: Discord Notification Completion
+        if: always()
+        run: |
+          REVIEW_SUMMARY=$(cat review.json | jq -r '.summary' 2>/dev/null || echo "Review completed")
+          node scripts/discord-complete.js --webhook_url="${{ inputs.discord_webhook || secrets.DISCORD_WEBHOOK_URL }}" --pr_number="${{ github.event.pull_request.number }}" --pr_title="${{ github.event.pull_request.title }}" --actor_name="${{ github.event.pull_request.user.login }}" --repository="${{ github.repository }}" --status="${{ job.status }}" --review_summary="$REVIEW_SUMMARY"

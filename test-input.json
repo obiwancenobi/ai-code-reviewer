@@ -1,0 +1,10 @@
+[
+  {
+    "path": "src/main.js",
+    "content": "function hello() {\n  console.log('Hello World');\n}\n\nhello();"
+  },
+  {
+    "path": "src/utils.js",
+    "content": "export function add(a, b) {\n  return a + b;\n}\n\nexport function multiply(a, b) {\n  return a * b;\n}"
+  }
+]

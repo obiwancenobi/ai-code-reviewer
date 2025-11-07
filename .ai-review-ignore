@@ -1,0 +1,33 @@
+# AI Code Review Ignore Patterns
+# Add file patterns to exclude from AI code review
+# Supports glob patterns and regex
+
+# Documentation
+*.md
+docs/
+README*
+CHANGELOG*
+
+# Generated files
+generated/
+migrations/
+coverage/
+
+# Test outputs
+test-results/
+*.test.js
+*.spec.js
+
+# Config files
+.env*
+config/local.*
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
