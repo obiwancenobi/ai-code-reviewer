@@ -1,0 +1,29 @@
+# Flutter-specific exclusions for AI code review
+# Build outputs
+build/
+android/app/build/
+ios/Flutter/Flutter.framework/
+ios/Flutter/App.framework/
+
+# Generated files
+lib/generated_plugin_registrant.dart
+.dart_tool/
+
+# Test coverage
+coverage/
+
+# IDE files
+.idea/
+.vscode/
+
+# Platform-specific
+android/.gradle/
+ios/Pods/
+ios/.symlinks/
+
+# Documentation
+*.md
+docs/
+
+# Lock files
+pubspec.lock
