@@ -79,7 +79,6 @@ Create `ai-review-config.json` in your repository root:
 ```
 
 To disable Discord notifications, omit the `notifications` section or set `discordWebhookUrl` to an empty string.
-}
 ```
 
 ### 2. Set Up GitHub Secrets
@@ -221,15 +220,20 @@ node index.js review --file src/example.js --pr 123
 
 ## Advanced Configuration
 
-### Custom Review Prompts
+### Custom Reviewer Personas
 
-Create custom prompts for specific personas by extending the configuration:
+Define your own reviewer personas with custom prompts:
 
 ```json
 {
   "ai": {
-    "customPrompts": {
-      "team-lead": "Review code as a technical lead focusing on architecture and maintainability..."
+    "provider": "openai",
+    "model": "gpt-4",
+    "persona": "code-reviewer",
+    "customPersonas": {
+      "code-reviewer": "You are an expert code reviewer focusing on clean code principles, SOLID design, and modern best practices. Pay special attention to naming conventions, function complexity, and code organization.",
+      "team-lead": "You are a technical team lead reviewing code for architectural decisions, scalability concerns, and team standards compliance. Focus on long-term maintainability and technical debt.",
+      "qa-engineer": "You are a QA engineer reviewing code for testability, error handling, and potential edge cases. Suggest improvements for debugging and monitoring."
     }
   }
 }
