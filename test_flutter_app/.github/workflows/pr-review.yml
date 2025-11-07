@@ -6,7 +6,7 @@ on:
 
 jobs:
   ai-review:
-    uses: your-org/ai-code-reviewer/.github/workflows/ai-code-review.yml@main
+    uses: obiwancenobi/ai-code-reviewer/.github/workflows/ai-code-review.yml@main
     with:
       model: ${{ vars.AI_MODEL || 'minimax/minimax-m2:free' }}
       actor_role: ${{ vars.ACTOR_ROLE || 'Senior Mobile Engineer' }}
