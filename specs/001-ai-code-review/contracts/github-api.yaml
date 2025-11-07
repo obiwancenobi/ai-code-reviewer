@@ -1,0 +1,270 @@
+openapi: 3.0.3
+info:
+  title: GitHub API Integration Contract
+  version: 1.0.0
+  description: API contract for GitHub integration in AI code review workflow
+
+servers:
+  - url: https://api.github.com
+    description: GitHub REST API
+
+paths:
+  /repos/{owner}/{repo}/pulls/{pull_number}/comments:
+    post:
+      summary: Create a review comment on a pull request
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pull_number
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - body
+              properties:
+                body:
+                  type: string
+                  description: The text of the review comment
+                commit_id:
+                  type: string
+                  description: The SHA of the commit to comment on
+                path:
+                  type: string
+                  description: The relative path to the file being commented on
+                line:
+                  type: integer
+                  description: The line index in the diff to comment on
+                side:
+                  type: string
+                  enum: [LEFT, RIGHT]
+                  description: The side of the diff to comment on
+                start_line:
+                  type: integer
+                  description: The start line index in the diff for multi-line comments
+                start_side:
+                  type: string
+                  enum: [LEFT, RIGHT]
+                  description: The start side of the diff for multi-line comments
+      responses:
+        '201':
+          description: Comment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewComment'
+        '422':
+          description: Validation failed
+        '403':
+          description: Forbidden
+        '404':
+          description: Pull request not found
+
+  /repos/{owner}/{repo}/pulls/{pull_number}/reviews:
+    post:
+      summary: Create a pull request review
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pull_number
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - event
+              properties:
+                event:
+                  type: string
+                  enum: [APPROVE, REQUEST_CHANGES, COMMENT]
+                  description: The review action to perform
+                body:
+                  type: string
+                  description: The body text of the review
+                comments:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/DraftReviewComment'
+                  description: Comments to post as part of the review
+      responses:
+        '200':
+          description: Review created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+
+  /repos/{owner}/{repo}/pulls/{pull_number}/files:
+    get:
+      summary: List pull request files
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pull_number
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 30
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+      responses:
+        '200':
+          description: Files retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DiffEntry'
+
+components:
+  schemas:
+    ReviewComment:
+      type: object
+      properties:
+        id:
+          type: integer
+        body:
+          type: string
+        commit_id:
+          type: string
+        path:
+          type: string
+        line:
+          type: integer
+        side:
+          type: string
+        start_line:
+          type: integer
+        start_side:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+
+    DraftReviewComment:
+      type: object
+      required:
+        - path
+        - body
+      properties:
+        path:
+          type: string
+          description: The relative path to the file being commented on
+        body:
+          type: string
+          description: The text of the review comment
+        line:
+          type: integer
+          description: The line index in the diff to comment on
+        side:
+          type: string
+          enum: [LEFT, RIGHT]
+          description: The side of the diff to comment on
+        start_line:
+          type: integer
+          description: The start line index in the diff for multi-line comments
+        start_side:
+          type: string
+          enum: [LEFT, RIGHT]
+          description: The start side of the diff for multi-line comments
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+        body:
+          type: string
+        commit_id:
+          type: string
+        event:
+          type: string
+        state:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+
+    DiffEntry:
+      type: object
+      properties:
+        sha:
+          type: string
+        filename:
+          type: string
+        status:
+          type: string
+          enum: [added, removed, modified, renamed, copied, changed, unchanged]
+        additions:
+          type: integer
+        deletions:
+          type: integer
+        changes:
+          type: integer
+        blob_url:
+          type: string
+        raw_url:
+          type: string
+        contents_url:
+          type: string
+        patch:
+          type: string
+          description: The diff content for this file
+
+    User:
+      type: object
+      properties:
+        login:
+          type: string
+        id:
+          type: integer
+        avatar_url:
+          type: string
+        url:
+          type: string
