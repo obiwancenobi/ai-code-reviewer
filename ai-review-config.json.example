@@ -1,0 +1,50 @@
+{
+  "ai": {
+    "provider": "openai",
+    "model": "gpt-4",
+    "persona": "senior-engineer",
+    "customPersonas": {
+      "code-reviewer": "You are an expert code reviewer focusing on clean code principles, SOLID design, and modern best practices.",
+      "team-lead": "You are a technical team lead reviewing code for architectural decisions and team standards compliance."
+    }
+  },
+  "processing": {
+    "maxFileSize": 1048576,
+    "chunkSize": 50000,
+    "excludePatterns": [
+      "node_modules/**",
+      "build/**",
+      "dist/**",
+      "*.min.js",
+      "*.lock",
+      "DerivedData/**",
+      ".gradle/**",
+      "Pods/**",
+      "Carthage/**",
+      "xcuserdata/**",
+      "*.xcuserdatad/**",
+      "*.iml",
+      ".dart_tool/**",
+      "platforms/**",
+      "plugins/**",
+      "__pycache__/**",
+      "*.pyc",
+      "target/**",
+      "*.class",
+      "[Bb]in/**",
+      "[Oo]bj/**",
+      "*.exe",
+      "vendor/**",
+      ".next/**",
+      ".nuxt/**",
+      "out/**",
+      ".cache/**",
+      ".bundle/**",
+      "tmp/**",
+      "log/**"
+    ]
+  },
+  "notifications": {
+    "discordWebhookUrl": "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN"
+  }
+}
