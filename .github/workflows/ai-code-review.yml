@@ -67,15 +67,25 @@ jobs:
           ACTOR_DATA="{\"name\":\"${{ github.event.pull_request.user.login }}\",\"role\":\"$ACTOR_ROLE\"}"
 
           echo "${{ steps.processed_changes.outputs.chunks }}" | node scripts/openrouter-review.js --model="$MODEL" --api_key="${{ secrets.OPENROUTER_API_KEY }}" --code_changes=@- --actor_data="$ACTOR_DATA" > review.json
-          REVIEW=$(cat review.json)
-          echo "review=$REVIEW" >> $GITHUB_OUTPUT
+          if [ -f review.json ] && [ -s review.json ]; then
+            REVIEW=$(cat review.json)
+            echo "review=$REVIEW" >> $GITHUB_OUTPUT
+          else
+            echo "Error: AI review failed to generate results" >&2
+            exit 1
+          fi
 
       - name: PR Commenting
+        if: success()
         run: |
           node scripts/comment-pr.js --pr_number="${{ github.event.pull_request.number }}" --repository="${{ github.repository }}" --github_token="${{ secrets.GITHUB_TOKEN }}" --comments="$(cat review.json | jq -r '.comments')"
 
       - name: Discord Notification Completion
         if: always()
         run: |
-          REVIEW_SUMMARY=$(cat review.json | jq -r '.summary' 2>/dev/null || echo "Review completed")
+          if [ -f review.json ]; then
+            REVIEW_SUMMARY=$(cat review.json | jq -r '.summary' 2>/dev/null || echo "Review completed")
+          else
+            REVIEW_SUMMARY="Review failed - no results generated"
+          fi
           node scripts/discord-complete.js --webhook_url="${{ inputs.discord_webhook || secrets.DISCORD_WEBHOOK_URL }}" --pr_number="${{ github.event.pull_request.number }}" --pr_title="${{ github.event.pull_request.title }}" --actor_name="${{ github.event.pull_request.user.login }}" --repository="${{ github.repository }}" --status="${{ job.status }}" --review_summary="$REVIEW_SUMMARY"
