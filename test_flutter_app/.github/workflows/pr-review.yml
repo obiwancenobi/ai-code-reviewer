@@ -1,15 +1,31 @@
-name: AI Code Review
+name: 🤖 AI Code Review
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, reopened, ready_for_review, synchronize]
+permissions: write-all
 
 jobs:
-  ai-review:
-    uses: obiwancenobi/ai-code-reviewer/.github/workflows/ai-code-review.yml@main
-    with:
-      model: ${{ vars.AI_MODEL || 'minimax/minimax-m2:free' }}
-      actor_role: ${{ vars.ACTOR_ROLE || 'Senior Mobile Engineer' }}
-    secrets:
-      openrouter_api_key: ${{ secrets.OPENROUTER_API_KEY }}
-      discord_webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+  ai-code-review2:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: AI Code Review Action v3
+        uses: obiwancenobi/ai-codereviewer@v1.1.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+          # Choose your AI provider and key
+          AI_PROVIDER: "openrouter" # or "anthropic" or "google" or 
+          AI_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          AI_MODEL: "minimax/minimax-m2:free"
+          AI_TEMPERATURE: 0.7 # 0 to 1 - higher values = more creativity and variance
+
+          # Optional configurations
+          APPROVE_REVIEWS: true
+          MAX_COMMENTS: 10 # 0 to disable
+          PROJECT_CONTEXT: "This is a Flutter project"
+          EXCLUDE_PATTERNS: "**/*.lock,**/*.json,**/*.md"
