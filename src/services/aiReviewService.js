@@ -81,10 +81,21 @@ class AIReviewService {
         logger.info('accepted file', file.filename);
       }
 
-      // Validate file size and type
-      const validation = await fileProcessor.validateFile(file.filename, {
-        maxFileSize: this.config.processing.maxFileSize
-      });
+      // For GitHub Actions, files come from PR API and may not exist locally
+      // Skip file existence validation for PR files
+      const validation = {
+        isValid: true,
+        fileInfo: {
+          size: file.size || 0,
+          language: fileProcessor.detectLanguage(file.filename)
+        }
+      };
+
+      // Check file size limit if available
+      if (this.config.processing?.maxFileSize && file.size > this.config.processing.maxFileSize) {
+        logger.debug(`Skipping large file ${file.filename}: ${file.size} bytes`);
+        continue;
+      }
 
       if (validation.isValid) {
         validFiles.push({
