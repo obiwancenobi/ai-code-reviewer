@@ -16,7 +16,7 @@ const program = new Command();
 program
   .name('ai-code-reviewer')
   .description('AI-powered code review for GitHub pull requests')
-  .version('1.0.8');
+  .version('1.0.9');
 
 // Review command for GitHub Actions
 program

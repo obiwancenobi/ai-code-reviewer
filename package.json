@@ -1,6 +1,6 @@
 {
   "name": "ai-code-reviewer",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "AI as Code Reviewer",
   "main": "index.js",
   "scripts": {
