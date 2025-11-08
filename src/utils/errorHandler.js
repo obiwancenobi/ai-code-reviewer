@@ -113,4 +113,4 @@ class ErrorHandler {
   }
 }
 
-module.exports = new ErrorHandler();
+module.exports = ErrorHandler;

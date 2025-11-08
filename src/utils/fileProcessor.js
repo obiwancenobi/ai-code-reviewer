@@ -475,4 +475,4 @@ class FileProcessor {
   }
 }
 
-module.exports = new FileProcessor();
+module.exports = FileProcessor;

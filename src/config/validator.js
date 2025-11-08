@@ -240,4 +240,4 @@ class ConfigValidator {
   }
 }
 
-module.exports = new ConfigValidator();
+module.exports = ConfigValidator;

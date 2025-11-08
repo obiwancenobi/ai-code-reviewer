@@ -40,4 +40,4 @@ class Logger {
   }
 }
 
-module.exports = new Logger();
+module.exports = Logger;

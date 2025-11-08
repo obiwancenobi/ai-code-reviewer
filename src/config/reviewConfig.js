@@ -161,4 +161,4 @@ class ReviewConfig {
   }
 }
 
-module.exports = new ReviewConfig();
+module.exports = ReviewConfig;

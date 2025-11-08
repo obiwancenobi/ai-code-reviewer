@@ -204,4 +204,4 @@ class CommentFormatter {
   }
 }
 
-module.exports = new CommentFormatter();
+module.exports = CommentFormatter;
