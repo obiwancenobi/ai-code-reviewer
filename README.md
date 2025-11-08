@@ -334,7 +334,33 @@ Settings are applied in this priority order (highest to lowest):
 - Use repository variables for team-specific overrides
 - Keep sensitive settings in GitHub secrets
 
-## 🔒 Security
+## 🔒 Security & Permissions
+
+### GitHub Permissions Required
+
+Your workflow must include these permissions for the AI Code Reviewer to access pull request data and create comments:
+
+```yaml
+permissions:
+  contents: read      # Required: Read repository contents
+  pull-requests: write # Required: Read PR files and create review comments
+  issues: write       # Required: Create issue comments
+```
+
+**Example workflow configuration:**
+```yaml
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      # ... your steps
+```
+
+### Security Features
 
 - API keys stored securely as GitHub Secrets
 - No source code persistence in logs or cache
