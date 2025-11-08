@@ -27,12 +27,19 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Checkout AI Code Reviewer
+      uses: actions/checkout@v4
+      with:
+        repository: 'obiwancenobi/ai-code-reviewer'
+        path: 'ai-reviewer'
+
     - name: Checkout target repository
       uses: actions/checkout@v4
       with:
         repository: ${{ inputs.repository }}
         ref: ${{ github.event.pull_request.head.sha || github.sha }}
         fetch-depth: 0
+        path: 'target-repo'
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -40,6 +47,7 @@ runs:
         node-version: '18'
 
     - name: Install dependencies
+      working-directory: ai-reviewer
       run: |
         if [ -f package-lock.json ]; then
           npm ci
@@ -49,6 +57,7 @@ runs:
       shell: bash
 
     - name: Run AI Code Review
+      working-directory: ai-reviewer
       env:
         GITHUB_TOKEN: ${{ github.token }}
         OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
@@ -66,7 +75,7 @@ runs:
         MAX_FILE_SIZE: ${{ env.MAX_FILE_SIZE }}
         CHUNK_SIZE: ${{ env.CHUNK_SIZE }}
       run: |
-        node index.js review --pr ${{ inputs.pr-number }} --repo ${{ inputs.repository }} --config ${{ inputs.config-file }}
+        node index.js review --pr ${{ inputs.pr-number }} --repo ${{ inputs.repository }} --config ../target-repo/${{ inputs.config-file }}
       shell: bash
 
 branding:
