@@ -272,6 +272,20 @@ class FileProcessor {
   }
 
   /**
+   * Check if file exists
+   * @param {string} filePath - Path to the file
+   * @returns {Promise<boolean>} - Whether file exists
+   */
+  async fileExists(filePath) {
+    try {
+      await fs.access(filePath);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
    * Get file size
    * @param {string} filePath - Path to the file
    * @returns {Promise<number>} - File size in bytes
@@ -434,9 +448,7 @@ class FileProcessor {
     };
 
     // Check if file exists
-    try {
-      await fs.access(filePath);
-    } catch (error) {
+    if (!(await this.fileExists(filePath))) {
       result.isValid = false;
       result.reason = 'File does not exist';
       return result;
