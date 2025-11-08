@@ -1,0 +1,69 @@
+name: 'AI Code Review'
+description: 'AI-powered code review for GitHub pull requests'
+author: 'obiwancenobi'
+inputs:
+  pr-number:
+    description: 'Pull request number'
+    required: true
+  repository:
+    description: 'Repository name (owner/repo)'
+    required: true
+  config-file:
+    description: 'Path to configuration file'
+    required: false
+    default: 'ai-review-config.json'
+  ai-provider:
+    description: 'AI provider to use'
+    required: false
+    default: 'openai'
+  ai-model:
+    description: 'AI model to use'
+    required: false
+    default: 'gpt-4'
+  ai-persona:
+    description: 'Reviewer persona'
+    required: false
+    default: 'senior-engineer'
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout target repository
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.repository }}
+        ref: ${{ github.event.pull_request.head.sha || github.sha }}
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm ci
+      shell: bash
+
+    - name: Run AI Code Review
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
+        ANTHROPIC_API_KEY: ${{ env.ANTHROPIC_API_KEY }}
+        GOOGLE_AI_API_KEY: ${{ env.GOOGLE_AI_API_KEY }}
+        DEEPSEEK_API_KEY: ${{ env.DEEPSEEK_API_KEY }}
+        OPENROUTER_API_KEY: ${{ env.OPENROUTER_API_KEY }}
+        XAI_API_KEY: ${{ env.XAI_API_KEY }}
+        GROQ_API_KEY: ${{ env.GROQ_API_KEY }}
+        ZAI_API_KEY: ${{ env.ZAI_API_KEY }}
+        DISCORD_WEBHOOK_URL: ${{ env.DISCORD_WEBHOOK_URL }}
+        AI_PROVIDER: ${{ inputs.ai-provider }}
+        AI_MODEL: ${{ inputs.ai-model }}
+        AI_PERSONA: ${{ inputs.ai-persona }}
+        MAX_FILE_SIZE: ${{ env.MAX_FILE_SIZE }}
+        CHUNK_SIZE: ${{ env.CHUNK_SIZE }}
+      run: |
+        node index.js review --pr ${{ inputs.pr-number }} --repo ${{ inputs.repository }} --config ${{ inputs.config-file }}
+      shell: bash
+
+branding:
+  icon: 'code'
+  color: 'blue'

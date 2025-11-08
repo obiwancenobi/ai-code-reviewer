@@ -12,42 +12,102 @@ on:
       - 'coverage/**'
       - '*.lock'
 
+  # Allow this workflow to be called by other repositories
+  workflow_call:
+    inputs:
+      pr-number:
+        required: true
+        type: string
+      repository:
+        required: true
+        type: string
+      ai-provider:
+        required: false
+        type: string
+        default: 'openai'
+      ai-model:
+        required: false
+        type: string
+        default: 'gpt-4'
+      ai-persona:
+        required: false
+        type: string
+        default: 'senior-engineer'
+      config-file:
+        required: false
+        type: string
+        default: 'ai-review-config.json'
+    secrets:
+      github-token:
+        required: true
+      openai-api-key:
+        required: false
+      anthropic-api-key:
+        required: false
+      google-ai-api-key:
+        required: false
+      deepseek-api-key:
+        required: false
+      openrouter-api-key:
+        required: false
+      xai-api-key:
+        required: false
+      groq-api-key:
+        required: false
+      zai-api-key:
+        required: false
+      discord-webhook-url:
+        required: false
+
 jobs:
   ai-review:
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false
 
     steps:
-      - name: Checkout code
+      - name: Checkout target repository
         uses: actions/checkout@v4
         with:
+          repository: ${{ inputs.repository || github.repository }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+
+      - name: Checkout AI Code Reviewer
+        uses: actions/checkout@v4
+        with:
+          repository: 'obiwancenobi/ai-code-reviewer'
+          path: 'ai-reviewer'
+          ref: 'main'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
+          cache-dependency-path: 'ai-reviewer/package-lock.json'
 
-      - name: Install dependencies
+      - name: Install AI Code Reviewer dependencies
+        working-directory: ai-reviewer
         run: npm ci
 
-      - name: Run AI Code Review
+      - name: AI Code Review
+        uses: obiwancenobi/ai-code-reviewer@v1
+        with:
+          pr-number: ${{ inputs.pr-number || github.event.pull_request.number }}
+          repository: ${{ inputs.repository || github.repository }}
+          ai-provider: ${{ inputs.ai-provider || vars.AI_PROVIDER || 'openai' }}
+          ai-model: ${{ inputs.ai-model || vars.AI_MODEL || 'gpt-4' }}
+          ai-persona: ${{ inputs.ai-persona || vars.AI_PERSONA || 'senior-engineer' }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          GOOGLE_AI_API_KEY: ${{ secrets.GOOGLE_AI_API_KEY }}
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          AI_PROVIDER: ${{ vars.AI_PROVIDER || 'openai' }}
-          AI_MODEL: ${{ vars.AI_MODEL || 'gpt-4' }}
-          AI_PERSONA: ${{ vars.AI_PERSONA || 'senior-engineer' }}
+          GITHUB_TOKEN: ${{ secrets.github-token || secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.openai-api-key || secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.anthropic-api-key || secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_AI_API_KEY: ${{ secrets.google-ai-api-key || secrets.GOOGLE_AI_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.deepseek-api-key || secrets.DEEPSEEK_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.openrouter-api-key || secrets.OPENROUTER_API_KEY }}
+          XAI_API_KEY: ${{ secrets.xai-api-key || secrets.XAI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.groq-api-key || secrets.GROQ_API_KEY }}
+          ZAI_API_KEY: ${{ secrets.zai-api-key || secrets.ZAI_API_KEY }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.discord-webhook-url || secrets.DISCORD_WEBHOOK_URL }}
           MAX_FILE_SIZE: ${{ vars.MAX_FILE_SIZE || '1048576' }}
           CHUNK_SIZE: ${{ vars.CHUNK_SIZE || '50000' }}
-        run: |
-          node index.js review --pr ${{ github.event.pull_request.number }} --repo ${{ github.repository }}

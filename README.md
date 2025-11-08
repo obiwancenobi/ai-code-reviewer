@@ -24,6 +24,7 @@ AI-powered code review automation for GitHub pull requests using configurable AI
 - **Discord Notifications**: Real-time status updates for review start, completion, and errors
 - **GitHub Integration**: Seamless PR commenting with inline and general review comments
 - **Enterprise Ready**: Secure credential management, rate limiting, comprehensive error handling
+- **Universal Compatibility**: Works with any technology stack (Node.js, Python, Java, Flutter, .NET, etc.)
 
 ## 📋 Prerequisites
 
@@ -119,9 +120,6 @@ AI-powered code review automation for GitHub pull requests using configurable AI
       ".next/**",
       ".nuxt/**"
     ]
-  },
-  "notifications": {
-    "discordWebhookUrl": "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN"
   }
 }
 ```
@@ -314,6 +312,74 @@ This AI code review workflow is designed to be easily deployed to any GitHub rep
    # Edit ai-review-config.json to match your needs
    nano ai-review-config.json
    ```
+
+### Using as GitHub Action (Recommended)
+
+The easiest way to use AI Code Review in any repository:
+
+```yaml
+# In your repository's .github/workflows/ai-review.yml
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+
+    steps:
+      - name: AI Code Review
+        uses: obiwancenobi/ai-code-reviewer@v1
+        with:
+          pr-number: ${{ github.event.pull_request.number }}
+          repository: ${{ github.repository }}
+          ai-provider: ${{ vars.AI_PROVIDER || 'openai' }}
+          ai-model: ${{ vars.AI_MODEL || 'gpt-4' }}
+          ai-persona: ${{ vars.AI_PERSONA || 'senior-engineer' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+```
+
+**Benefits of GitHub Action approach:**
+- No Node.js setup required in your repository
+- Works with any technology stack (Flutter, Python, Java, .NET, etc.)
+- Simple one-step integration
+- Automatic updates when new versions are released
+- Secure secret handling
+
+### Using as Reusable Workflow (Advanced)
+
+For organizations that prefer workflow-level control:
+
+```yaml
+# In your repository's .github/workflows/ai-review.yml
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  ai-review:
+    uses: obiwancenobi/ai-code-reviewer/.github/workflows/ai-review.yml@main
+    with:
+      pr-number: ${{ github.event.pull_request.number }}
+      repository: ${{ github.repository }}
+      ai-provider: ${{ vars.AI_PROVIDER || 'openai' }}
+      ai-model: ${{ vars.AI_MODEL || 'gpt-4' }}
+      ai-persona: ${{ vars.AI_PERSONA || 'senior-engineer' }}
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+      anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+      discord-webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+```
 
 ### Manual Setup
 
