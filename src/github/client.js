@@ -7,11 +7,12 @@ const logger = require('../utils/logger');
 const errorHandler = require('../utils/errorHandler');
 
 class GitHubClient {
-  constructor(token) {
+  constructor(token, author) {
     this.octokit = new Octokit({
       auth: token,
       userAgent: 'ai-code-reviewer'
     });
+    this.author = author || 'github-actions[bot]';
   }
 
   /**
@@ -93,7 +94,8 @@ class GitHubClient {
           commit_id: commitId,
           path: comment.path,
           line: comment.line,
-          side: 'RIGHT'
+          side: 'RIGHT',
+          author_association: this.author
         });
         return response.data;
       },

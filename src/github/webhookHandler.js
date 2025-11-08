@@ -11,7 +11,7 @@ const errorHandler = require('../utils/errorHandler');
 class WebhookHandler {
   constructor(config) {
     this.config = config;
-    this.githubClient = new GitHubClient(process.env.GITHUB_TOKEN);
+    this.githubClient = new GitHubClient(process.env.GITHUB_TOKEN, config.author);
     this.aiReviewService = new AIReviewService(config);
     this.discordService = config.notifications?.discordWebhookUrl ?
       new DiscordService(config.notifications.discordWebhookUrl) : null;
