@@ -71,7 +71,12 @@ class ConfigValidator {
       result.errors.push('AI model is required');
     }
 
-    if (aiConfig.persona && !reviewConfig.getAvailablePersonas().includes(aiConfig.persona)) {
+    // Check if persona is a built-in persona or a custom persona
+    const availablePersonas = reviewConfig.getAvailablePersonas();
+    const isBuiltInPersona = availablePersonas.includes(aiConfig.persona);
+    const isCustomPersona = aiConfig.customPersonas && aiConfig.customPersonas[aiConfig.persona];
+
+    if (aiConfig.persona && !isBuiltInPersona && !isCustomPersona) {
       result.warnings.push(`Unknown AI persona: ${aiConfig.persona}`);
     }
 
@@ -172,7 +177,7 @@ class ConfigValidator {
    * @returns {Object} - Validation result
    */
   validateEnvironment() {
-    const result = { errors: [], warnings: [] };
+    const result = { errors: [], warnings: [], isValid: true };
     const requiredEnvVars = ['GITHUB_TOKEN'];
 
     // Check required environment variables
@@ -212,6 +217,9 @@ class ConfigValidator {
         result.errors.push('DISCORD_WEBHOOK_URL is not a valid URL');
       }
     }
+
+    // Set isValid based on errors
+    result.isValid = result.errors.length === 0;
 
     return result;
   }
