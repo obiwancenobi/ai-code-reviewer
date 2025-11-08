@@ -16,6 +16,19 @@
 
 AI-powered code review automation for GitHub pull requests using configurable AI models and reviewer personas.
 
+## 📸 Screenshots
+
+### AI Code Review in Action
+
+**Inline Comments on Pull Requests:**
+![AI Code Review Comments](screenshots/ss_1.png)
+![AI Code Review Comments](screenshots/ss_2.png)
+
+**Discord Notifications:**
+![Discord Notifications](screenshots/discord_notif.png)
+
+*See the AI reviewer providing detailed code analysis with specific suggestions and line-by-line feedback, plus real-time Discord notifications for review status updates.*
+
 ## 🚀 Features
 
 - **Multi-Provider AI Support**: OpenAI GPT-4, Anthropic Claude, Google Gemini, DeepSeek, OpenRouter, xAI Grok, Groq, and Z.ai
