@@ -10,16 +10,240 @@ const logger = require('./logger');
 class FileProcessor {
   constructor() {
     this.defaultExclusions = [
+      // Node.js/JavaScript/TypeScript
       'node_modules/**',
       'build/**',
       'dist/**',
       '*.min.js',
+      '*.min.css',
       '*.lock',
-      '.git/**',
-      '*.log',
+      'package-lock.json',
+      'yarn.lock',
+      'pnpm-lock.yaml',
       'coverage/**',
       '.nyc_output/**',
-      '*.tsbuildinfo'
+      '*.log',
+      '.DS_Store',
+      'Thumbs.db',
+      '*.tmp',
+      '*.swp',
+      '.vscode/**',
+      '.idea/**',
+      '*.tsbuildinfo',
+      '.env*',
+      '!.env.example',
+
+      // Mobile platforms
+      // iOS
+      '*.xcuserdatad/**',
+      'xcuserdata/**',
+      '*.xcscmblueprint',
+      '*.xccheckout',
+      '*.moved-aside',
+      'DerivedData/**',
+      '*.hmap',
+      '*.ipa',
+      '*.dSYM/**',
+      '*.framework/**',
+      'Carthage/**',
+      'Pods/**',
+      '*.xcodeproj/xcuserdata/**',
+      '*.xcodeproj/project.xcworkspace/xcuserdata/**',
+
+      // Android
+      '*.iml',
+      '.gradle/**',
+      'local.properties',
+      '.idea/caches/**',
+      '.idea/libraries/**',
+      '.idea/modules.xml',
+      '.idea/workspace.xml',
+      '.idea/navEditor.xml',
+      '.idea/assetWizardSettings.xml',
+      '*.hprof',
+      'captures/**',
+      'build/**',
+      'app/build/**',
+      'gradle/wrapper/gradle-wrapper.jar',
+
+      // React Native
+      '.expo/**',
+      '.expo-shared/**',
+
+      // Flutter
+      '.dart_tool/**',
+      '.flutter-plugins',
+      '.flutter-plugins-dependencies',
+      '.packages',
+      '.pub-cache/**',
+      '.pub/**',
+      'build/**',
+      'android/app/build/**',
+      'ios/Flutter/App.framework/**',
+      'ios/Flutter/Flutter.framework/**',
+
+      // Cordova/PhoneGap
+      'platforms/**',
+      'plugins/**',
+
+      // Ionic
+      'www/build/**',
+      'www/platforms/**',
+      'www/plugins/**',
+
+      // Capacitor
+      'android/app/src/main/assets/public/**',
+      'ios/App/App/public/**',
+
+      // Backend frameworks
+      // Python
+      '__pycache__/**',
+      '*.pyc',
+      '*.pyo',
+      '*.pyd',
+      '.Python',
+      'env/**',
+      'venv/**',
+      'ENV/**',
+      '.env',
+      'pip-log.txt',
+      'pip-delete-this-directory.txt',
+      '.tox/**',
+      '.coverage',
+      'htmlcov/**',
+      '.pytest_cache/**',
+      'nosetests.xml',
+      'coverage.xml',
+      '*.cover',
+      '.hypothesis/**',
+
+      // Java
+      'target/**',
+      '*.class',
+      '*.jar',
+      '*.war',
+      '*.ear',
+      '*.nar',
+      'hs_err_pid*',
+      '.gradle/**',
+      'gradle-app.setting',
+      '!gradle-wrapper.jar',
+      '.classpath',
+      '.project',
+      '.settings/**',
+      'bin/**',
+
+      // .NET/C#
+      '[Bb]in/**',
+      '[Oo]bj/**',
+      '*.user',
+      '*.suo',
+      '*.cache',
+      '*.log',
+      '*.tmp',
+      '*.temp',
+      '*.tmp_proj',
+      'packages/**',
+      '.vs/**',
+      '.vscode/**',
+
+      // Go
+      '*.exe',
+      '*.exe~',
+      '*.dll',
+      '*.so',
+      '*.dylib',
+      '*.test',
+      '*.out',
+      'vendor/**',
+
+      // Rust
+      'target/**',
+      'debug/**',
+      'release/**',
+      '**/*.rs.bk',
+      '*.pdb',
+
+      // PHP
+      'vendor/**',
+      'composer.lock',
+      '*.log',
+      'cache/**',
+      'logs/**',
+
+      // Ruby
+      '.bundle/**',
+      '.sass-cache/**',
+      '.gem',
+      'gemfiles/**',
+      'vendor/bundle/**',
+      'log/**',
+      'tmp/**',
+
+      // Frontend frameworks
+      // React/Vue/Angular
+      '.next/**',
+      '.nuxt/**',
+      'out/**',
+      '.vuepress/dist/**',
+      '.cache/**',
+      '.parcel-cache/**',
+      'dist/**',
+      'build/**',
+      '.storybook-out/**',
+      'storybook-static/**',
+
+      // General frontend
+      '.DS_Store',
+      'Thumbs.db',
+      'node_modules/**',
+      'npm-debug.log*',
+      'yarn-debug.log*',
+      'yarn-error.log*',
+      '.npm',
+      '.yarn-integrity',
+
+      // General mobile
+      '*.apk',
+      '*.aab',
+      '*.mobileprovision',
+      '*.p12',
+      '*.pem',
+      'fastlane/**',
+      'screenshots/**',
+
+      // Git and version control
+      '.git/**',
+
+      // Documentation
+      '*.md',
+      'docs/',
+      'README*',
+      'CHANGELOG*',
+
+      // Generated files
+      'generated/',
+      'migrations/',
+      'coverage/',
+
+      // Test outputs
+      'test-results/',
+      '*.test.js',
+      '*.spec.js',
+
+      // Config files
+      '.env*',
+      'config/local.*',
+
+      // IDE files
+      '.vscode/',
+      '.idea/',
+      '*.swp',
+      '*.swo',
+
+      // OS files
+      '.DS_Store',
+      'Thumbs.db'
     ];
   }
 
@@ -80,10 +304,16 @@ class FileProcessor {
     const ext = path.extname(filePath).toLowerCase();
 
     const languageMap = {
+      // Web/Frontend
       '.js': 'javascript',
       '.ts': 'typescript',
       '.jsx': 'javascript',
       '.tsx': 'typescript',
+      '.vue': 'vue',
+      '.svelte': 'svelte',
+      '.astro': 'astro',
+
+      // Backend
       '.py': 'python',
       '.java': 'java',
       '.cpp': 'cpp',
@@ -93,20 +323,57 @@ class FileProcessor {
       '.rb': 'ruby',
       '.go': 'go',
       '.rs': 'rust',
+      '.scala': 'scala',
+      '.dart': 'dart',
+
+      // Mobile
       '.swift': 'swift',
       '.kt': 'kotlin',
-      '.scala': 'scala',
+      '.m': 'objective-c',
+      '.mm': 'objective-c++',
+
+      // Systems/Other
       '.sh': 'bash',
+      '.ps1': 'powershell',
+      '.pl': 'perl',
+      '.lua': 'lua',
+      '.r': 'r',
+      '.hs': 'haskell',
+      '.clj': 'clojure',
+      '.elm': 'elm',
+      '.ex': 'elixir',
+      '.exs': 'elixir',
+
+      // Data/Config
       '.sql': 'sql',
+      '.graphql': 'graphql',
+      '.proto': 'protobuf',
+
+      // Web
       '.html': 'html',
+      '.htm': 'html',
       '.css': 'css',
       '.scss': 'scss',
+      '.sass': 'sass',
       '.less': 'less',
+
+      // Data Formats
       '.json': 'json',
       '.xml': 'xml',
       '.yaml': 'yaml',
       '.yml': 'yaml',
-      '.md': 'markdown'
+      '.toml': 'toml',
+      '.ini': 'ini',
+
+      // Documentation
+      '.md': 'markdown',
+      '.rst': 'restructuredtext',
+      '.tex': 'latex',
+
+      // Other
+      '.dockerfile': 'dockerfile',
+      '.makefile': 'makefile',
+      '.cmake': 'cmake'
     };
 
     return languageMap[ext] || 'unknown';
