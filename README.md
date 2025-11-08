@@ -28,67 +28,80 @@ AI-powered code review automation for GitHub pull requests using configurable AI
 
 ## 📋 Prerequisites
 
-- Node.js 18+ LTS
 - GitHub repository with Actions enabled
 - AI API access (OpenAI, Anthropic, or other supported providers)
 - Discord server (optional, for notifications)
 
 ## 🛠️ Quick Start
 
-### Option 1: Use in Your Own Repository
+### GitHub Action (Recommended - Works with Any Tech Stack)
 
-1. **Copy workflow files** to your repository:
-   ```bash
-   # Create directories if they don't exist
-   mkdir -p .github/workflows
+Add AI code review to any repository with one simple step:
 
-   # Copy the workflow file
-   curl -o .github/workflows/ai-review.yml https://raw.githubusercontent.com/obiwancenobi/ai-code-reviewer/main/.github/workflows/ai-review.yml
+1. **Create `.github/workflows/ai-review.yml`**:
+   ```yaml
+   name: AI Code Review
+
+   on:
+     pull_request:
+       types: [opened, synchronize, reopened]
+
+   jobs:
+     ai-review:
+       runs-on: ubuntu-latest
+       if: github.event.pull_request.draft == false
+
+       steps:
+         - name: AI Code Review
+           uses: obiwancenobi/ai-code-reviewer@v1
+           with:
+             pr-number: ${{ github.event.pull_request.number }}
+             repository: ${{ github.repository }}
+           env:
+             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+             OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
    ```
 
-2. **Create configuration file**:
-   ```bash
-   # Download and customize configuration
-   curl -o ai-review-config.json https://raw.githubusercontent.com/obiwancenobi/ai-code-reviewer/main/ai-review-config.json.example
-
-   # Edit with your preferred settings
-   nano ai-review-config.json
-   ```
-
-3. **Set up GitHub secrets** in your repository settings:
+2. **Set up GitHub secrets** in your repository settings:
    - `GITHUB_TOKEN` (automatically provided by GitHub Actions)
    - `OPENAI_API_KEY` (or your chosen AI provider's API key)
    - `DISCORD_WEBHOOK_URL` (optional, for notifications)
 
-4. **Commit and push**:
+3. **Commit and push**:
    ```bash
    git add .
-   git commit -m "Add AI code review workflow"
+   git commit -m "Add AI code review"
    git push
    ```
 
-### Option 2: Fork and Customize
+### Automated Setup
 
-1. **Fork this repository** on GitHub
+For a complete setup with examples:
 
-2. **Clone your fork**:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/ai-code-reviewer.git
-   cd ai-code-reviewer
-   npm install
-   ```
+```bash
+# Run the automated setup script
+curl -fsSL https://raw.githubusercontent.com/obiwancenobi/ai-code-reviewer/main/setup-workflow.sh | bash
+```
 
-3. **Customize configuration** in `ai-review-config.json`
+### Advanced Configuration
 
-4. **Deploy to your target repository** by copying the workflow and config files
+Use repository variables for organization-wide settings:
 
-### Option 3: Use as a Template
-
-1. **Use this repository as a template** for new projects
-
-2. **Configure** the AI provider and settings
-
-3. **The workflow will run automatically** on pull requests in the templated repository
+```yaml
+- name: AI Code Review
+  uses: obiwancenobi/ai-code-reviewer@v1
+  with:
+    pr-number: ${{ github.event.pull_request.number }}
+    repository: ${{ github.repository }}
+    ai-provider: ${{ vars.AI_PROVIDER || 'openai' }}
+    ai-model: ${{ vars.AI_MODEL || 'gpt-4' }}
+    ai-persona: ${{ vars.AI_PERSONA || 'senior-engineer' }}
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+```
 
 ## ⚙️ Configuration
 
@@ -248,11 +261,77 @@ The system automatically excludes common build artifacts and dependencies:
 ## 🎯 How It Works
 
 1. **PR Trigger**: GitHub Actions workflow activates on pull request events
-2. **File Analysis**: System identifies changed files, applies exclusion filters
-3. **AI Processing**: Code is chunked if needed and sent to configured AI model
-4. **Review Generation**: AI analyzes code using specified persona and generates comments
-5. **Comment Posting**: Inline and general comments posted to GitHub PR
-6. **Notification**: Discord webhook sends status updates (if configured)
+2. **Repository Checkout**: Action checks out the target repository code
+3. **File Analysis**: System identifies changed files, applies comprehensive exclusion filters
+4. **AI Processing**: Code is chunked if needed and sent to configured AI model
+5. **Review Generation**: AI analyzes code using specified persona and generates comments
+6. **Comment Posting**: Inline and general comments posted to GitHub PR
+7. **Notification**: Discord webhook sends status updates (if configured)
+
+## 🔧 Action Inputs
+
+| Input | Required | Default | Description |
+|-------|----------|---------|-------------|
+| `pr-number` | Yes | - | Pull request number |
+| `repository` | Yes | - | Repository name (owner/repo) |
+| `config-file` | No | `ai-review-config.json` | Path to configuration file |
+| `ai-provider` | No | `openai` | AI provider (openai, anthropic, google, etc.) |
+| `ai-model` | No | `gpt-4` | AI model to use |
+| `ai-persona` | No | `senior-engineer` | Reviewer persona |
+
+## 🔑 Required Secrets
+
+- `GITHUB_TOKEN`: Automatically provided by GitHub Actions
+- One AI provider API key: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, etc.
+- `DISCORD_WEBHOOK_URL`: Optional, for notifications
+
+## ⚙️ Configuration Priority
+
+Settings are applied in this priority order (highest to lowest):
+
+| Source | Example | Priority | Use Case |
+|--------|---------|----------|----------|
+| **Action Inputs** | `ai-provider: 'anthropic'` | 1️⃣ Highest | Repository-specific overrides |
+| **Repository Variables** | `vars.AI_PROVIDER` | 2️⃣ High | Organization-wide defaults |
+| **Environment Variables** | `secrets.ANTHROPIC_API_KEY` | 3️⃣ Medium | Secure credential management |
+| **Config File** | `ai-review-config.json` | 4️⃣ Low | Baseline settings |
+| **Defaults** | `'openai'` | 5️⃣ Lowest | Fallback values |
+
+### Example Priority Resolution
+
+**Config file sets:**
+```json
+{
+  "ai": {
+    "provider": "openai",
+    "model": "gpt-4"
+  }
+}
+```
+
+**Workflow sets:**
+```yaml
+- uses: obiwancenobi/ai-code-reviewer@v1
+  with:
+    ai-provider: ${{ vars.AI_PROVIDER || 'anthropic' }}
+    ai-model: ${{ vars.AI_MODEL || 'claude-3-sonnet' }}
+```
+
+**Result:**
+- `ai-provider`: `anthropic` (from repository variable)
+- `ai-model`: `claude-3-sonnet` (from repository variable)
+- Other settings from config file or defaults
+
+### Recommended Setup Strategy
+
+**For Individual Repositories:**
+- Use action inputs for repository-specific settings
+- Use config file for baseline configuration
+
+**For Organizations:**
+- Set organization variables for consistent AI provider/model
+- Use repository variables for team-specific overrides
+- Keep sensitive settings in GitHub secrets
 
 ## 🔒 Security
 
@@ -288,37 +367,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Integrated with [GitHub Actions](https://github.com/features/actions)
 - Notifications via [Discord](https://discord.com/)
 
-## 🔄 Using in Other Repositories
+## 🔄 Usage Examples
 
-This AI code review workflow is designed to be easily deployed to any GitHub repository. Here are the steps to integrate it:
-
-### Automated Setup (Recommended)
-
-1. **Run the setup script** in your target repository:
-   ```bash
-   # From your target repository root
-   curl -fsSL https://raw.githubusercontent.com/obiwancenobi/ai-code-reviewer/main/setup-workflow.sh | bash
-   ```
-
-   This script will:
-   - Download the latest workflow file
-   - Create a basic configuration file
-   - Provide instructions for setting up secrets
-
-2. **Configure secrets** in your repository settings as prompted
-
-3. **Customize configuration** (optional):
-   ```bash
-   # Edit ai-review-config.json to match your needs
-   nano ai-review-config.json
-   ```
-
-### Using as GitHub Action (Recommended)
-
-The easiest way to use AI Code Review in any repository:
+### Basic Usage (Any Repository)
 
 ```yaml
-# In your repository's .github/workflows/ai-review.yml
 name: AI Code Review
 
 on:
@@ -328,7 +381,6 @@ on:
 jobs:
   ai-review:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.draft == false
 
     steps:
       - name: AI Code Review
@@ -336,116 +388,122 @@ jobs:
         with:
           pr-number: ${{ github.event.pull_request.number }}
           repository: ${{ github.repository }}
-          ai-provider: ${{ vars.AI_PROVIDER || 'openai' }}
-          ai-model: ${{ vars.AI_MODEL || 'gpt-4' }}
-          ai-persona: ${{ vars.AI_PERSONA || 'senior-engineer' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 ```
 
-**Benefits of GitHub Action approach:**
-- No Node.js setup required in your repository
-- Works with any technology stack (Flutter, Python, Java, .NET, etc.)
-- Simple one-step integration
-- Automatic updates when new versions are released
-- Secure secret handling
+### Technology-Specific Examples
 
-### Using as Reusable Workflow (Advanced)
-
-For organizations that prefer workflow-level control:
-
+#### Flutter/Dart Projects
 ```yaml
-# In your repository's .github/workflows/ai-review.yml
 name: AI Code Review
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    paths-ignore:
+      - '**/android/**'
+      - '**/ios/**'
+      - '**/*.png'
+      - '**/*.jpg'
 
 jobs:
   ai-review:
-    uses: obiwancenobi/ai-code-reviewer/.github/workflows/ai-review.yml@main
-    with:
-      pr-number: ${{ github.event.pull_request.number }}
-      repository: ${{ github.repository }}
-      ai-provider: ${{ vars.AI_PROVIDER || 'openai' }}
-      ai-model: ${{ vars.AI_MODEL || 'gpt-4' }}
-      ai-persona: ${{ vars.AI_PERSONA || 'senior-engineer' }}
-    secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
-      openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-      anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
-      discord-webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: AI Code Review
+        uses: obiwancenobi/ai-code-reviewer@v1
+        with:
+          pr-number: ${{ github.event.pull_request.number }}
+          repository: ${{ github.repository }}
+          ai-persona: 'senior-engineer'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
-### Manual Setup
+#### Python Projects
+```yaml
+- name: AI Code Review
+  uses: obiwancenobi/ai-code-reviewer@v1
+  with:
+    pr-number: ${{ github.event.pull_request.number }}
+    repository: ${{ github.repository }}
+    ai-persona: 'performance-specialist'
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+```
 
-1. **Download workflow file**:
-   ```bash
-   curl -o .github/workflows/ai-review.yml \
-     https://raw.githubusercontent.com/obiwancenobi/ai-code-reviewer/main/.github/workflows/ai-review.yml
-   ```
+#### Java/.NET Projects
+```yaml
+- name: AI Code Review
+  uses: obiwancenobi/ai-code-reviewer@v1
+  with:
+    pr-number: ${{ github.event.pull_request.number }}
+    repository: ${{ github.repository }}
+    ai-provider: 'anthropic'
+    ai-model: 'claude-3-sonnet-20240229'
+    ai-persona: 'security-expert'
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+```
 
-2. **Download configuration template**:
-   ```bash
-   curl -o ai-review-config.json \
-     https://raw.githubusercontent.com/obiwancenobi/ai-code-reviewer/main/ai-review-config.json.example
-   ```
+### Advanced Configuration
 
-3. **Set up GitHub secrets** for your AI provider
+#### Using Repository Variables (Organization Setup)
+Set these in repository Settings → Actions → Variables:
+- `AI_PROVIDER`: `anthropic`
+- `AI_MODEL`: `claude-3-sonnet-20240229`
+- `AI_PERSONA`: `security-expert`
 
-4. **Commit and deploy**:
-   ```bash
-   git add .
-   git commit -m "feat: add AI code review workflow"
-   git push
-   ```
+```yaml
+- name: AI Code Review
+  uses: obiwancenobi/ai-code-reviewer@v1
+  with:
+    pr-number: ${{ github.event.pull_request.number }}
+    repository: ${{ github.repository }}
+    ai-provider: ${{ vars.AI_PROVIDER || 'openai' }}
+    ai-model: ${{ vars.AI_MODEL || 'gpt-4' }}
+    ai-persona: ${{ vars.AI_PERSONA || 'senior-engineer' }}
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+```
 
-### Repository-Specific Configuration
-
-Each repository can have its own configuration:
+#### Custom Configuration File
+Create `ai-review-config.json` in your repository:
 
 ```json
 {
   "ai": {
-    "provider": "anthropic",
-    "model": "claude-3-sonnet",
-    "persona": "security-expert"
+    "customPersonas": {
+      "team-lead": "You are a technical team lead reviewing for architecture and scalability..."
+    }
   },
   "processing": {
+    "maxFileSize": 2097152,
     "excludePatterns": [
-      "node_modules/**",
-      "build/**",
-      "tests/**"
+      "custom-exclude/**"
     ]
   }
 }
 ```
 
-### Multi-Repository Deployment
+### Automated Setup
 
-For organizations deploying across multiple repositories:
-
-1. **Create a shared configuration repository**
-2. **Use GitHub repository templates** with pre-configured workflows
-3. **Set up organization-level secrets** for AI API keys
-4. **Use GitHub Actions reusable workflows** for centralized updates
-
-### Updating the Workflow
-
-To update to the latest version across repositories:
+For complete setup with examples, run:
 
 ```bash
-# Update workflow file
-curl -o .github/workflows/ai-review.yml \
-  https://raw.githubusercontent.com/obiwancenobi/ai-code-reviewer/main/.github/workflows/ai-review.yml
-
-# Check for configuration updates
-curl -s https://raw.githubusercontent.com/obiwancenobi/ai-code-reviewer/main/ai-review-config.json.example
+curl -fsSL https://raw.githubusercontent.com/obiwancenobi/ai-code-reviewer/main/setup-workflow.sh | bash
 ```
+
+This creates workflow examples for different approaches and provides setup guidance.
 
 ## 📞 Support
 
