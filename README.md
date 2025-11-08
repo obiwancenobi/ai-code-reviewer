@@ -147,8 +147,7 @@ Use repository variables for organization-wide settings:
       ".next/**",
       ".nuxt/**"
     ]
-  },
-  "author": "github-actions[bot]"
+  }
 }
 ```
 
@@ -234,22 +233,11 @@ You can define custom reviewer personas with your own prompts:
 - Mix built-in and custom personas in the same configuration
 - Prompts can be as specific or general as needed
 
-### Author Configuration
+### Comment Attribution
 
-You can customize the author name that appears on AI review comments:
+AI review comments appear with the GitHub Actions bot identity. The author attribution is automatically handled by GitHub based on the token used for authentication.
 
-```json
-{
-  "author": "github-actions[bot]"
-}
-```
-
-**Available options:**
-- `"github-actions[bot]"` - Default GitHub Actions bot
-- `"ai-code-reviewer[bot]"` - Custom bot name
-- Any custom username you prefer
-
-*Note: This setting controls how the AI reviewer appears in GitHub comments and doesn't affect functionality.*
+**Note:** The `author` configuration option was removed as GitHub's API doesn't support custom author association for review comments. Comments will appear as coming from the authenticated user/bot associated with the `GITHUB_TOKEN`.
 
 ## 🔧 CLI Usage
 

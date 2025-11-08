@@ -48,7 +48,8 @@ class WebhookHandler {
           prNumber: pr.number,
           repository: payload.repository.full_name,
           title: pr.title,
-          author: pr.user.login
+          author: pr.user.login,
+          reviewer: 'AI Code Reviewer'
         });
       }
 

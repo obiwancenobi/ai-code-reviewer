@@ -62,7 +62,7 @@ class DiscordService {
     switch (notification.type) {
       case 'review_start':
         embed.title = '🤖 AI Code Review Started';
-        embed.description = `Review started for pull request #${notification.prNumber}`;
+        embed.description = `AI Code Reviewer has started reviewing pull request #${notification.prNumber}`;
         embed.color = 0x3498db; // Blue
         embed.fields = [
           {
@@ -76,7 +76,7 @@ class DiscordService {
             inline: true
           },
           {
-            name: 'Author',
+            name: 'PR Author',
             value: notification.author,
             inline: true
           },
@@ -84,6 +84,11 @@ class DiscordService {
             name: 'Title',
             value: notification.title,
             inline: false
+          },
+          {
+            name: 'Reviewer',
+            value: notification.reviewer || 'AI Code Reviewer',
+            inline: true
           }
         ];
         break;

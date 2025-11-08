@@ -94,8 +94,7 @@ class GitHubClient {
           commit_id: commitId,
           path: comment.path,
           line: comment.line,
-          side: 'RIGHT',
-          author_association: this.author
+          side: 'RIGHT'
         });
         return response.data;
       },
