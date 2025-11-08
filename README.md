@@ -29,6 +29,7 @@ AI-powered code review automation for GitHub pull requests using configurable AI
 ## 📋 Prerequisites
 
 - GitHub repository with Actions enabled
+- Node.js 20+ LTS (for local development)
 - AI API access (OpenAI, Anthropic, or other supported providers)
 - Discord server (optional, for notifications)
 
