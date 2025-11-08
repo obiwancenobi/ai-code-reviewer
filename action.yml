@@ -1,5 +1,5 @@
-name: 'AI Code Review'
-description: 'AI-powered code review for GitHub pull requests'
+name: 'AI Persona Code Review'
+description: 'AI-powered code review automation for GitHub pull requests using configurable AI models and reviewer personas.'
 author: 'obiwancenobi'
 inputs:
   pr-number:
