@@ -1,0 +1,184 @@
+openapi: 3.0.3
+info:
+  title: AI Model API Integration Contract
+  version: 1.0.0
+  description: API contract for AI model integration in code review workflow
+
+servers:
+  - url: https://api.openai.com/v1
+    description: OpenAI API
+  - url: https://api.anthropic.com
+    description: Anthropic API
+  - url: https://generativelanguage.googleapis.com
+    description: Google Gemini API
+  - url: https://api.deepseek.com
+    description: DeepSeek API
+  - url: https://openrouter.ai/api/v1
+    description: OpenRouter API
+  - url: https://api.x.ai/v1
+    description: xAI API
+  - url: https://api.groq.com/openai/v1
+    description: Groq API
+  - url: https://api.z.ai/v1
+    description: Z.ai API
+
+paths:
+  /chat/completions:
+    post:
+      summary: Create a chat completion for code review
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - messages
+              properties:
+                model:
+                  type: string
+                  description: The AI model to use
+                  enum: [gpt-4, gpt-4-turbo, gpt-3.5-turbo, claude-3-sonnet, claude-3-haiku, gemini-pro, gemini-pro-vision, deepseek-chat, deepseek-coder, openrouter-model, grok-1, grok-beta, llama2-70b, mixtral-8x7b, z-model-1]
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - role
+                      - content
+                    properties:
+                      role:
+                        type: string
+                        enum: [system, user, assistant]
+                      content:
+                        type: string
+                        description: The message content
+                max_tokens:
+                  type: integer
+                  description: Maximum tokens to generate
+                  default: 1000
+                temperature:
+                  type: number
+                  minimum: 0
+                  maximum: 2
+                  description: Sampling temperature
+                  default: 0.7
+                system:
+                  type: string
+                  description: System prompt for code review persona
+      responses:
+        '200':
+          description: Successful completion
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - choices
+                properties:
+                  choices:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - message
+                      properties:
+                        message:
+                          type: object
+                          required:
+                            - content
+                          properties:
+                            content:
+                              type: string
+                              description: The generated review comment
+                            role:
+                              type: string
+                              enum: [assistant]
+                  usage:
+                    type: object
+                    properties:
+                      prompt_tokens:
+                        type: integer
+                      completion_tokens:
+                        type: integer
+                      total_tokens:
+                        type: integer
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '429':
+          description: Rate limit exceeded
+        '500':
+          description: Internal server error
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Bearer token for API authentication
+
+  schemas:
+    CodeReviewRequest:
+      type: object
+      required:
+        - code
+        - language
+        - context
+      properties:
+        code:
+          type: string
+          description: The code snippet to review
+        language:
+          type: string
+          description: Programming language of the code
+        context:
+          type: string
+          description: Additional context about the change
+        persona:
+          type: string
+          description: Reviewer persona (senior-engineer, security-expert, etc.)
+          default: senior-engineer
+        max_tokens:
+          type: integer
+          description: Maximum response length
+          default: 500
+
+    CodeReviewResponse:
+      type: object
+      required:
+        - comments
+      properties:
+        comments:
+          type: array
+          items:
+            type: object
+            required:
+              - type
+              - content
+            properties:
+              type:
+                type: string
+                enum: [inline, general]
+                description: Type of review comment
+              content:
+                type: string
+                description: The review comment text
+              severity:
+                type: string
+                enum: [info, warning, error]
+                description: Severity level of the issue
+              line_number:
+                type: integer
+                description: Line number for inline comments
+              suggestion:
+                type: string
+                description: Optional code improvement suggestion
+        summary:
+          type: string
+          description: Overall assessment of the code changes
