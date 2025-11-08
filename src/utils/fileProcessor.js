@@ -4,7 +4,7 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const { minimatch } = require('minimatch');
+const { Minimatch } = require('minimatch');
 const logger = require('./logger');
 
 class FileProcessor {
@@ -31,7 +31,6 @@ class FileProcessor {
       '.idea/**',
       '*.tsbuildinfo',
       '.env*',
-      '!.env.example',
 
       // Mobile platforms
       // iOS
@@ -127,7 +126,6 @@ class FileProcessor {
       'hs_err_pid*',
       '.gradle/**',
       'gradle-app.setting',
-      '!gradle-wrapper.jar',
       '.classpath',
       '.project',
       '.settings/**',
@@ -243,7 +241,7 @@ class FileProcessor {
 
       // OS files
       '.DS_Store',
-      'Thumbs.db'
+      'Thumbs.db',
     ];
   }
 
@@ -254,11 +252,18 @@ class FileProcessor {
    * @returns {boolean} - Whether the file should be excluded
    */
   shouldExcludeFile(filePath, customExclusions = []) {
+    const normalizedPath = filePath.replace(/\\/g, '/'); // handle Windows paths
     const allExclusions = [...this.defaultExclusions, ...customExclusions];
 
-    return allExclusions.some(pattern => {
+    return allExclusions.some((pattern) => {
       try {
-        return minimatch(filePath, pattern);
+        const mm = new Minimatch(pattern, { dot: true });
+        const match = mm.match(normalizedPath);
+        if (match) {
+          logger.info(`Excluded "${normalizedPath}" by pattern "${pattern}"`);
+          return true;
+        }
+        return false;
       } catch (error) {
         logger.warn(`Invalid exclusion pattern "${pattern}":`, error.message);
         return false;
@@ -373,7 +378,7 @@ class FileProcessor {
       // Other
       '.dockerfile': 'dockerfile',
       '.makefile': 'makefile',
-      '.cmake': 'cmake'
+      '.cmake': 'cmake',
     };
 
     return languageMap[ext] || 'unknown';
@@ -424,8 +429,8 @@ class FileProcessor {
       fileInfo: {
         path: filePath,
         size: 0,
-        language: 'unknown'
-      }
+        language: 'unknown',
+      },
     };
 
     // Check if file exists

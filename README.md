@@ -20,16 +20,16 @@ AI-powered code review automation for GitHub pull requests using configurable AI
 
 - **Multi-Provider AI Support**: OpenAI GPT-4, Anthropic Claude, Google Gemini, DeepSeek, OpenRouter, xAI Grok, Groq, and Z.ai
 - **Configurable Reviewer Personas**: Senior Engineer, Security Expert, Performance Specialist, Accessibility Advocate
-- **Smart File Processing**: Large file chunking, comprehensive exclusion patterns for all major development stacks
+- **Smart File Processing**: Large file chunking, comprehensive exclusion patterns for all major development stacks (164+ patterns)
 - **Discord Notifications**: Real-time status updates for review start, completion, and errors
 - **GitHub Integration**: Seamless PR commenting with inline and general review comments
-- **Enterprise Ready**: Secure credential management, rate limiting, comprehensive error handling
-- **Universal Compatibility**: Works with any technology stack (Node.js, Python, Java, Flutter, .NET, etc.)
+- **Enterprise Ready**: Secure credential management, rate limiting, comprehensive error handling, robust JSON parsing
+- **Universal Compatibility**: Works with any technology stack (Node.js, Python, Java, Flutter, .NET, Go, Rust, PHP, Ruby, etc.)
 
 ## 📋 Prerequisites
 
 - GitHub repository with Actions enabled
-- Node.js 20+ LTS (for local development)
+- Node.js 20+ LTS
 - AI API access (OpenAI, Anthropic, or other supported providers)
 - Discord server (optional, for notifications)
 
@@ -370,10 +370,10 @@ jobs:
 
 ## 📊 Performance
 
-- **Processing Time**: <10 minutes for repositories <100MB
+- **Processing Time**: <10 minutes for repositories <100MB (depends on AI provider response times)
 - **File Size Limit**: 1MB per file (configurable)
 - **Chunking**: Automatic splitting for large files
-- **Concurrency**: Parallel file processing with rate limiting
+- **Concurrency**: Parallel file processing with rate limiting and error resilience
 
 ## 🤝 Contributing
 

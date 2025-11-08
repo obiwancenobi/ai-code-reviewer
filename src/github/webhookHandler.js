@@ -61,7 +61,7 @@ class WebhookHandler {
           type: result.success ? 'review_success' : 'review_error',
           prNumber: pr.number,
           repository: payload.repository.full_name,
-          commentCount: result.comments?.length || 0,
+          commentCount: result.comments || 0,  // ← Fixed: was result.comments?.length, should be result.comments (number)
           error: result.error
         });
       }
@@ -163,19 +163,24 @@ class WebhookHandler {
       try {
         if (comment.type === 'inline' && comment.line) {
           // Post inline comment
-          await this.githubClient.createReviewComment(owner, repo, pullNumber, {
+          const result = await this.githubClient.createReviewComment(owner, repo, pullNumber, {
             body: comment.body,
             commitId: comment.commit_id,
             path: comment.path,
             line: comment.line,
             side: comment.side || 'RIGHT'
           });
+
+          // Only count if comment was actually posted (not null due to invalid line)
+          if (result !== null) {
+            postedCount++;
+          }
         } else {
           // Post general comment
           await this.githubClient.createIssueComment(owner, repo, pullNumber, comment.body);
+          postedCount++;
         }
 
-        postedCount++;
         logger.debug(`Posted comment ${postedCount}/${comments.length}`);
 
         // Small delay to avoid rate limiting

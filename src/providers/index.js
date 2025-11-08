@@ -208,7 +208,6 @@ Only return the JSON array, no additional text.`;
     const response = await this.client.chat.completions.create({
       model: this.config.model || 'gpt-4',
       messages: [{ role: 'user', content: prompt }],
-      max_tokens: 2000,
       temperature: 0.7
     });
 
@@ -223,7 +222,6 @@ Only return the JSON array, no additional text.`;
   async generateAnthropicResponse(prompt) {
     const response = await this.client.messages.create({
       model: this.config.model || 'claude-3-sonnet-20240229',
-      max_tokens: 2000,
       temperature: 0.7,
       messages: [{ role: 'user', content: prompt }]
     });
@@ -252,19 +250,37 @@ Only return the JSON array, no additional text.`;
    */
   parseReviewResponse(response) {
     try {
-      // Try to extract JSON from response
-      const jsonMatch = response.match(/\[[\s\S]*\]/);
+      // Clean the response by removing markdown code blocks and extra text
+      let cleanResponse = response.trim();
+
+      // Remove markdown code blocks if present
+      cleanResponse = cleanResponse.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '');
+
+      // Remove any leading/trailing text before/after JSON
+      const jsonStart = cleanResponse.indexOf('[');
+      const jsonEnd = cleanResponse.lastIndexOf(']');
+
+      if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+        cleanResponse = cleanResponse.substring(jsonStart, jsonEnd + 1);
+      }
+
+      // Try to extract JSON array from response
+      const jsonMatch = cleanResponse.match(/\[[\s\S]*\]/);
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]);
       }
 
-      // Fallback: try parsing the entire response as JSON
-      return JSON.parse(response);
+      // Fallback: try parsing the entire cleaned response as JSON
+      return JSON.parse(cleanResponse);
     } catch (error) {
       logger.warn('Failed to parse AI response as JSON, returning general comment:', error.message);
+      logger.debug('Raw AI response:', response);
+
+      // Create a more informative general comment
+      const truncatedResponse = response.substring(0, 500);
       return [{
         type: 'general',
-        content: response.substring(0, 500), // Limit length
+        content: `AI Review Feedback:\n\n${truncatedResponse}${response.length > 500 ? '\n\n[Response truncated]' : ''}`,
         severity: 'info'
       }];
     }

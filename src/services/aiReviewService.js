@@ -77,6 +77,8 @@ class AIReviewService {
       if (fileProcessor.shouldExcludeFile(file.filename, this.config.processing.excludePatterns)) {
         logger.debug(`Skipping excluded file: ${file.filename}`);
         continue;
+      } else {
+        logger.info('accepted file', file.filename);
       }
 
       // Validate file size and type
@@ -178,13 +180,16 @@ Chunk: ${chunkIndex + 1}/${totalChunks}`;
     );
 
     // Convert AI comments to GitHub review format
-    return comments.map(comment => ({
-      path: file.filename,
-      line: comment.line_number,
-      body: this.formatCommentBody(comment),
-      severity: comment.severity,
-      type: comment.type
-    }));
+    return comments
+      .filter(comment => comment.line_number && comment.line_number > 0) // Filter out invalid line numbers
+      .map(comment => ({
+        path: file.filename,
+        line: comment.line_number,
+        body: this.formatCommentBody(comment),
+        commitId: prDetails.head?.sha, // Will be overridden by GitHubClient
+        severity: comment.severity,
+        type: comment.type
+      }));
   }
 
   /**
@@ -193,7 +198,9 @@ Chunk: ${chunkIndex + 1}/${totalChunks}`;
    * @returns {string} - Formatted comment body
    */
   formatCommentBody(comment) {
-    let body = `**${comment.severity.toUpperCase()}:** ${comment.content}`;
+    // Handle undefined/null severity
+    const severity = comment.severity || 'INFO';
+    let body = `**${severity.toUpperCase()}:** ${comment.content}`;
 
     if (comment.suggestion) {
       body += `\n\n**Suggestion:** ${comment.suggestion}`;

@@ -70,17 +70,30 @@ class GitHubClient {
   async createReviewComment(owner, repo, pullNumber, comment) {
     return await errorHandler.withRetry(
       async () => {
+        // Skip comments without valid line numbers
+        if (!comment.line || comment.line <= 0) {
+          logger.warn(`Skipping comment for ${comment.path}: invalid line number ${comment.line}`);
+          return null;
+        }
+
+        // Get PR details to get the head commit
+        const prResponse = await this.octokit.pulls.get({
+          owner,
+          repo,
+          pull_number: pullNumber
+        });
+
+        const commitId = prResponse.data.head.sha;
+
         const response = await this.octokit.pulls.createReviewComment({
           owner,
           repo,
           pull_number: pullNumber,
           body: comment.body,
-          commit_id: comment.commitId,
+          commit_id: commitId,
           path: comment.path,
           line: comment.line,
-          side: comment.side || 'RIGHT',
-          start_line: comment.startLine,
-          start_side: comment.startSide
+          side: 'RIGHT'
         });
         return response.data;
       },
