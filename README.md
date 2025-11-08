@@ -3,6 +3,8 @@
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?logo=github-actions&logoColor=white)](https://github.com/features/actions)
+[![GitHub Release](https://img.shields.io/github/v/release/obiwancenobi/ai-code-reviewer.svg)](https://github.com/obiwancenobi/ai-code-reviewer/releases)
+[![Downloads](https://img.shields.io/github/downloads/obiwancenobi/ai-code-reviewer/total.svg)](https://github.com/obiwancenobi/ai-code-reviewer/releases)
 [![OpenAI](https://img.shields.io/badge/OpenAI-412991?logo=openai&logoColor=white)](https://openai.com/)
 [![Anthropic](https://img.shields.io/badge/Anthropic-191919?logo=anthropic&logoColor=white)](https://anthropic.com/)
 [![Google AI](https://img.shields.io/badge/Google%20AI-4285F4?logo=google&logoColor=white)](https://ai.google/)

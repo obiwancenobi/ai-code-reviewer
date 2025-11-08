@@ -59,7 +59,7 @@ program
         pull_request: {
           number: options.pr,
           title: `PR #${options.pr}`,
-          user: { login: 'unknown' }
+          user: { login: 'CLI User' }
         },
         repository: {
           full_name: options.repo,
