@@ -49,7 +49,8 @@ class WebhookHandler {
           repository: payload.repository.full_name,
           title: pr.title,
           author: pr.user?.login || 'Unknown',
-          reviewer: 'AI Code Reviewer'
+          reviewer: 'AI Code Reviewer',
+          aiModel: `${this.config.ai.provider}|${this.config.ai.model}`
         });
       }
 
@@ -63,7 +64,8 @@ class WebhookHandler {
           prNumber: pr.number,
           repository: payload.repository.full_name,
           commentCount: result.comments || 0,  // ← Fixed: was result.comments?.length, should be result.comments (number)
-          error: result.error
+          error: result.error,
+          aiModel: `${this.config.ai.provider}|${this.config.ai.model}`
         });
       }
 

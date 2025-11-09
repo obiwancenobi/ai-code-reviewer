@@ -89,6 +89,11 @@ class DiscordService {
             name: 'Reviewer',
             value: notification.reviewer || 'AI Code Reviewer',
             inline: true
+          },
+          {
+            name: 'AI Model',
+            value: notification.aiModel || 'Unknown',
+            inline: true
           }
         ];
         break;
@@ -111,6 +116,11 @@ class DiscordService {
           {
             name: 'Comments Posted',
             value: notification.commentCount?.toString() || '0',
+            inline: true
+          },
+          {
+            name: 'AI Model',
+            value: notification.aiModel || 'Unknown',
             inline: true
           }
         ];

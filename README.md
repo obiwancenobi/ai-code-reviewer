@@ -23,20 +23,25 @@ AI-powered code review automation for GitHub pull requests using configurable AI
 ### AI Code Review in Action
 
 **Inline Comments on Pull Requests:**
-![AI Code Review Comments](screenshots/ss_1.png)
-![AI Code Review Comments](screenshots/ss_2.png)
+![AI Code Review Comments](screenshots/inline_comment_1.png)
+![AI Code Review Comments](screenshots/inline_comment_2.png)
+![AI Code Review Comments](screenshots/inline_comment_3.png)
+![AI Code Review Comments](screenshots/inline_comment_4.png)
 
 **Discord Notifications:**
 ![Discord Notifications](screenshots/discord_notif.png)
 
-*See the AI reviewer providing detailed code analysis with specific suggestions and line-by-line feedback, plus real-time Discord notifications for review status updates.*
+**CLI:**
+![CLI](screenshots/cli.png)
+
+*See the AI reviewer providing detailed code analysis with specific suggestions and line-by-line feedback, plus real-time Discord notifications showing AI model information for review status updates.*
 
 ## 🚀 Features
 
 - **Multi-Provider AI Support**: OpenAI GPT-4, Anthropic Claude, Google Gemini, DeepSeek, OpenRouter, xAI Grok, Groq, and Z.ai
 - **Configurable Reviewer Personas**: Senior Engineer, Security Expert, Performance Specialist, Accessibility Advocate
 - **Smart File Processing**: Large file chunking, comprehensive exclusion patterns for all major development stacks (164+ patterns)
-- **Discord Notifications**: Real-time status updates for review start, completion, and errors
+- **Discord Notifications**: Real-time status updates for review start, completion, and errors with AI model information
 - **GitHub Integration**: Seamless PR commenting with inline and general review comments
 - **Enterprise Ready**: Secure credential management, rate limiting, comprehensive error handling, robust JSON parsing
 - **Universal Compatibility**: Works with any technology stack (Node.js, Python, Java, Flutter, .NET, Go, Rust, PHP, Ruby, etc.)
@@ -69,7 +74,7 @@ Add AI code review to any repository with one simple step:
 
        steps:
          - name: AI Code Review
-           uses: obiwancenobi/ai-code-reviewer@v1
+           uses: obiwancenobi/ai-code-reviewer@v1.0.12
            with:
              pr-number: ${{ github.event.pull_request.number }}
              repository: ${{ github.repository }}
@@ -105,7 +110,7 @@ Use repository variables for organization-wide settings:
 
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1
+  uses: obiwancenobi/ai-code-reviewer@v1.0.12
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -237,7 +242,12 @@ You can define custom reviewer personas with your own prompts:
 
 ### Comment Attribution
 
-AI review comments appear with the GitHub Actions bot identity. The author attribution is automatically handled by GitHub based on the token used for authentication.
+AI review comments appear with the GitHub Actions bot identity and include AI model information. The author attribution is automatically handled by GitHub based on the token used for authentication.
+
+**Example comment attribution:**
+```
+*Reviewed by 🤖 (senior-engineer) using openai/gpt-4*
+```
 
 **Note:** The `author` configuration option was removed as GitHub's API doesn't support custom author association for review comments. Comments will appear as coming from the authenticated user/bot associated with the `GITHUB_TOKEN`.
 
@@ -287,8 +297,8 @@ The system automatically excludes common build artifacts and dependencies:
 3. **File Analysis**: System identifies changed files, applies comprehensive exclusion filters
 4. **AI Processing**: Code is chunked if needed and sent to configured AI model
 5. **Review Generation**: AI analyzes code using specified persona and generates comments
-6. **Comment Posting**: Inline and general comments posted to GitHub PR
-7. **Notification**: Discord webhook sends status updates (if configured)
+6. **Comment Posting**: Inline and general comments posted to GitHub PR with AI model attribution
+7. **Notification**: Discord webhook sends status updates with AI model information (if configured)
 
 ## 🔧 Action Inputs
 
@@ -333,7 +343,7 @@ Settings are applied in this priority order (highest to lowest):
 
 **Workflow sets:**
 ```yaml
-- uses: obiwancenobi/ai-code-reviewer@v1
+- uses: obiwancenobi/ai-code-reviewer@v1.0.12
   with:
     ai-provider: ${{ vars.AI_PROVIDER || 'anthropic' }}
     ai-model: ${{ vars.AI_MODEL || 'claude-3-sonnet' }}
@@ -432,7 +442,7 @@ jobs:
 
     steps:
       - name: AI Code Review
-        uses: obiwancenobi/ai-code-reviewer@v1
+        uses: obiwancenobi/ai-code-reviewer@v1.0.12
         with:
           pr-number: ${{ github.event.pull_request.number }}
           repository: ${{ github.repository }}
@@ -462,7 +472,7 @@ jobs:
 
     steps:
       - name: AI Code Review
-        uses: obiwancenobi/ai-code-reviewer@v1
+        uses: obiwancenobi/ai-code-reviewer@v1.0.12
         with:
           pr-number: ${{ github.event.pull_request.number }}
           repository: ${{ github.repository }}
@@ -475,7 +485,7 @@ jobs:
 #### Python Projects
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1
+  uses: obiwancenobi/ai-code-reviewer@v1.0.12
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -488,7 +498,7 @@ jobs:
 #### Java/.NET Projects
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1
+  uses: obiwancenobi/ai-code-reviewer@v1.0.12
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -510,7 +520,7 @@ Set these in repository Settings → Actions → Variables:
 
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1
+  uses: obiwancenobi/ai-code-reviewer@v1.0.12
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}

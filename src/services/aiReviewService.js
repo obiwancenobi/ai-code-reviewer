@@ -217,8 +217,9 @@ Chunk: ${chunkIndex + 1}/${totalChunks}`;
       body += `\n\n**Suggestion:** ${comment.suggestion}`;
     }
 
-    // Add AI reviewer attribution
-    body += `\n\n*Reviewed by AI (${this.config.ai.persona})*`;
+    // Add AI reviewer attribution with model info
+    const aiModel = `${this.config.ai.provider}|${this.config.ai.model}`;
+    body += `\n\n*Reviewed by 🤖 (${this.config.ai.persona}) using ${aiModel}*`;
 
     return body;
   }
