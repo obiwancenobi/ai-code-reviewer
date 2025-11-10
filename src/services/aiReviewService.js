@@ -11,6 +11,7 @@ class AIReviewService {
   constructor(config) {
     this.config = config;
     this.aiProvider = new AIProvider(config.ai.provider, config.ai);
+    logger.info(`Initialized AIReviewService with provider: ${this.config.ai.provider}, model: ${this.config.ai.model}`);
   }
 
   /**
@@ -178,6 +179,7 @@ class AIReviewService {
    * @returns {Promise<Array>} - Array of review comments
    */
   async reviewCodeChunk(code, file, prDetails, chunkIndex, totalChunks) {
+    logger.info(`Routing review for ${file.filename} to ${this.aiProvider.provider} with model ${this.config.ai.model}`);
     const context = `File: ${file.filename}
 Status: ${file.status}
 Changes: +${file.additions} -${file.deletions}

@@ -8,7 +8,7 @@ class ReviewConfig {
   constructor() {
     this.schema = {
       ai: {
-        provider: { type: 'string', required: true, enum: ['openai', 'anthropic', 'google', 'deepseek', 'openrouter', 'xai', 'groq', 'zai'] },
+        provider: { type: 'string', required: true, enum: ['openai', 'anthropic', 'google', 'deepseek', 'openrouter', 'xai', 'groq', 'zai', 'together-ai', 'fireworks-ai', 'mistral-ai', 'cerebras-ai'] },
         model: { type: 'string', required: true },
         persona: { type: 'string', required: false, default: 'senior-engineer' }
       },
@@ -154,7 +154,11 @@ class ReviewConfig {
       openrouter: ['openrouter-model'],
       xai: ['grok-1', 'grok-beta'],
       groq: ['llama2-70b', 'mixtral-8x7b'],
-      zai: ['z-model-1']
+      zai: ['z-model-1'],
+      'together-ai': ['meta-llama/Llama-2-70b-chat-hf', 'codellama/CodeLlama-7b-Instruct-hf'],
+      'fireworks-ai': ['accounts/fireworks/models/llama-v3p1-405b', 'accounts/fireworks/models/mixtral-8x7b-instruct'],
+      'mistral-ai': ['mistral-large-latest', 'open-mistral-7b'],
+      'cerebras-ai': ['llama-3.1-8b', 'mixtral-8x7b']
     };
 
     return recommendations[provider] || [];

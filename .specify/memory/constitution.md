@@ -1,10 +1,10 @@
 <!--
-Version change: 0.0.0 → 0.1.0
-Added sections: VI. GitHub Workflow Automation
+Version change: 0.1.0 → 0.2.0
+Added sections: None
 Removed sections: None
-Modified principles: None
+Modified principles: Updated Node.js version to 20+ LTS in VI. GitHub Workflow Automation and Additional Constraints
 Templates requiring updates: None (✅ updated)
-Follow-up TODOs: None
+Follow-up TODOs: Update all references to Node.js version in docs and workflows
 -->
 # AI Code Reviewer Constitution
 
@@ -26,11 +26,11 @@ Focus areas requiring integration tests: New library contract tests, Contract ch
 Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles
 
 ### VI. GitHub Workflow Automation
-All Node.js projects MUST use GitHub Actions for CI/CD; Workflows MUST include linting, testing, and deployment stages; Node.js version MUST be pinned and updated regularly; Secrets and environment variables MUST be managed securely; AI-powered code review workflows MUST be implemented for pull requests using configurable AI models and reviewer personas; Large files MUST be processed in chunks; Discord notifications MUST be sent for review start, completion, and errors; Unnecessary files/folders (e.g., node_modules/, build/, dist/) MUST be excluded from review
+All Node.js projects MUST use GitHub Actions for CI/CD; Workflows MUST include linting, testing, and deployment stages; Node.js version MUST be pinned and updated regularly (20+ LTS); Secrets and environment variables MUST be managed securely; AI-powered code review workflows MUST be implemented for pull requests using configurable AI models and reviewer personas; Large files MUST be processed in chunks; Discord notifications MUST be sent for review start, completion, and errors; Unnecessary files/folders (e.g., node_modules/, build/, dist/) MUST be excluded from review
 
 ## Additional Constraints
 
-Technology stack requirements: Node.js for runtime, npm for package management, GitHub for version control and CI/CD
+Technology stack requirements: Node.js for runtime (20+ LTS), npm for package management, GitHub for version control and CI/CD
 
 ## Development Workflow
 
@@ -42,4 +42,4 @@ Constitution supersedes all other practices; Amendments require documentation, a
 
 All PRs/reviews must verify compliance; Complexity must be justified; Use constitution for runtime development guidance
 
-**Version**: 0.1.0 | **Ratified**: 2025-11-07 | **Last Amended**: 2025-11-07
+**Version**: 0.2.0 | **Ratified**: 2025-11-07 | **Last Amended**: 2025-11-10

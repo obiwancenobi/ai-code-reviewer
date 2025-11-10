@@ -63,7 +63,7 @@ jobs:
 
     steps:
       - name: AI Code Review
-        uses: obiwancenobi/ai-code-reviewer@v1.0.12
+        uses: obiwancenobi/ai-code-reviewer@v1.0.14
         with:
           pr-number: ${{ github.event.pull_request.number }}
           repository: ${{ github.repository }}
