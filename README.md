@@ -15,6 +15,10 @@
 [![Jest](https://img.shields.io/badge/Jest-C21325?logo=jest&logoColor=white)](https://jestjs.io/)
 [![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white)](https://eslint.org/)
 [![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=white)](https://prettier.io/)
+[![Together AI](https://img.shields.io/badge/Together%20AI-FF6B35?logo=ai&logoColor=white)](https://together.ai/)
+[![Fireworks AI](https://img.shields.io/badge/Fireworks%20AI-FF6B35?logo=fireworks&logoColor=white)](https://fireworks.ai/)
+[![Mistral AI](https://img.shields.io/badge/Mistral%20AI-000000?logo=mistral&logoColor=white)](https://mistral.ai/)
+[![Cerebras AI](https://img.shields.io/badge/Cerebras%20AI-000000?logo=ai&logoColor=white)](https://cerebras.ai/)
 
 AI-powered code review automation for GitHub pull requests using configurable AI models and reviewer personas.
 
@@ -38,7 +42,7 @@ AI-powered code review automation for GitHub pull requests using configurable AI
 
 ## 🚀 Features
 
-- **Multi-Provider AI Support**: OpenAI GPT-4, Anthropic Claude, Google Gemini, DeepSeek, OpenRouter, xAI Grok, Groq, and Z.ai
+- **Multi-Provider AI Support**: OpenAI GPT-4, Anthropic Claude, Google Gemini, DeepSeek, OpenRouter, xAI Grok, Groq, Z.ai, Together AI, Fireworks AI, Mistral AI, and Cerebras.
 - **Configurable Reviewer Personas**: Senior Engineer, Security Expert, Performance Specialist, Accessibility Advocate
 - **Smart File Processing**: Large file chunking, comprehensive exclusion patterns for all major development stacks (164+ patterns)
 - **Discord Notifications**: Real-time status updates for review start, completion, and errors with AI model information
