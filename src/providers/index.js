@@ -5,6 +5,7 @@
 const OpenAI = require('openai');
 const Anthropic = require('@anthropic-ai/sdk');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const Mistral = require('@mistralai/mistralai');
 const logger = require('../utils/logger');
 const errorHandler = require('../utils/errorHandler');
 
@@ -67,6 +68,30 @@ class AIProvider {
           baseURL: 'https://api.z.ai/v1'
         });
 
+      case 'together-ai':
+        // Together AI uses OpenAI-compatible API
+        return new OpenAI({
+          apiKey,
+          baseURL: 'https://api.together.xyz/v1'
+        });
+
+      case 'fireworks-ai':
+        // Fireworks AI uses OpenAI-compatible API
+        return new OpenAI({
+          apiKey,
+          baseURL: 'https://api.fireworks.ai/inference/v1'
+        });
+
+      case 'cerebras-ai':
+        // Cerebras AI uses OpenAI-compatible API
+        return new OpenAI({
+          apiKey,
+          baseURL: 'https://api.cerebras.ai/v1'
+        });
+
+      case 'mistral-ai':
+        return new Mistral({ apiKey });
+
       default:
         throw new Error(`Unsupported AI provider: ${this.provider}`);
     }
@@ -85,7 +110,11 @@ class AIProvider {
       openrouter: 'OPENROUTER_API_KEY',
       xai: 'XAI_API_KEY',
       groq: 'GROQ_API_KEY',
-      zai: 'ZAI_API_KEY'
+      zai: 'ZAI_API_KEY',
+      'together-ai': 'TOGETHER_API_KEY',
+      'fireworks-ai': 'FIREWORKS_API_KEY',
+      'mistral-ai': 'MISTRAL_API_KEY',
+      'cerebras-ai': 'CEREBRAS_API_KEY'
     };
 
     const envVar = keyMap[this.provider];
@@ -186,6 +215,9 @@ Only return the JSON array, no additional text.`;
       case 'xai':
       case 'groq':
       case 'zai':
+      case 'together-ai':
+      case 'fireworks-ai':
+      case 'cerebras-ai':
         return await this.generateOpenAIResponse(prompt);
 
       case 'anthropic':
@@ -193,6 +225,9 @@ Only return the JSON array, no additional text.`;
 
       case 'google':
         return await this.generateGoogleResponse(prompt);
+
+      case 'mistral-ai':
+        return await this.generateMistralResponse(prompt);
 
       default:
         throw new Error(`Unsupported provider: ${this.provider}`);
@@ -241,6 +276,21 @@ Only return the JSON array, no additional text.`;
 
     const result = await model.generateContent(prompt);
     return result.response.text();
+  }
+
+  /**
+   * Generate response using Mistral AI API
+   * @param {string} prompt - Prompt to send
+   * @returns {Promise<string>} - AI response
+   */
+  async generateMistralResponse(prompt) {
+    const response = await this.client.chat.completions.create({
+      model: this.config.model || 'mistral-large-latest',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7
+    });
+
+    return response.choices[0].message.content;
   }
 
   /**

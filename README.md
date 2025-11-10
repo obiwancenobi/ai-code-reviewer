@@ -15,6 +15,10 @@
 [![Jest](https://img.shields.io/badge/Jest-C21325?logo=jest&logoColor=white)](https://jestjs.io/)
 [![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white)](https://eslint.org/)
 [![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=white)](https://prettier.io/)
+[![Together AI](https://img.shields.io/badge/Together%20AI-FF6B35?logo=ai&logoColor=white)](https://together.ai/)
+[![Fireworks AI](https://img.shields.io/badge/Fireworks%20AI-FF6B35?logo=fireworks&logoColor=white)](https://fireworks.ai/)
+[![Mistral AI](https://img.shields.io/badge/Mistral%20AI-000000?logo=mistral&logoColor=white)](https://mistral.ai/)
+[![Cerebras AI](https://img.shields.io/badge/Cerebras%20AI-000000?logo=ai&logoColor=white)](https://cerebras.ai/)
 
 AI-powered code review automation for GitHub pull requests using configurable AI models and reviewer personas.
 
@@ -38,7 +42,7 @@ AI-powered code review automation for GitHub pull requests using configurable AI
 
 ## 🚀 Features
 
-- **Multi-Provider AI Support**: OpenAI GPT-4, Anthropic Claude, Google Gemini, DeepSeek, OpenRouter, xAI Grok, Groq, and Z.ai
+- **Multi-Provider AI Support**: OpenAI GPT-4, Anthropic Claude, Google Gemini, DeepSeek, OpenRouter, xAI Grok, Groq, Z.ai, Together AI, Fireworks AI, Mistral AI, and Cerebras.
 - **Configurable Reviewer Personas**: Senior Engineer, Security Expert, Performance Specialist, Accessibility Advocate
 - **Smart File Processing**: Large file chunking, comprehensive exclusion patterns for all major development stacks (164+ patterns)
 - **Discord Notifications**: Real-time status updates for review start, completion, and errors with AI model information
@@ -74,7 +78,7 @@ Add AI code review to any repository with one simple step:
 
        steps:
          - name: AI Code Review
-           uses: obiwancenobi/ai-code-reviewer@v1.0.12
+           uses: obiwancenobi/ai-code-reviewer@v1.0.14
            with:
              pr-number: ${{ github.event.pull_request.number }}
              repository: ${{ github.repository }}
@@ -110,7 +114,7 @@ Use repository variables for organization-wide settings:
 
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.12
+  uses: obiwancenobi/ai-code-reviewer@v1.0.14
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -205,6 +209,12 @@ Use repository variables for organization-wide settings:
 | xAI | `grok-1`, `grok-beta` | `XAI_API_KEY` | ✅ Production |
 | Groq | `llama2-70b`, `mixtral-8x7b` | `GROQ_API_KEY` | ✅ Production |
 | Z.ai | `z-model-1` | `ZAI_API_KEY` | ✅ Production |
+| Together AI | `meta-llama/Llama-2-70b-chat-hf`, `codellama/CodeLlama-7b-Instruct-hf` | `TOGETHER_API_KEY` | ✅ Production |
+| Fireworks AI | `accounts/fireworks/models/llama-v3p1-405b`, `accounts/fireworks/models/mixtral-8x7b-instruct` | `FIREWORKS_API_KEY` | ✅ Production |
+| Mistral AI | `mistral-large-latest`, `open-mistral-7b` | `MISTRAL_API_KEY` | ✅ Production |
+| Cerebras AI | `llama-3.1-8b`, `mixtral-8x7b` | `CEREBRAS_API_KEY` | ✅ Production |
+
+**Note**: Models listed are examples. Users can replace with any supported model for the provider as per their documentation and preferences.
 
 ### Reviewer Personas
 
@@ -343,7 +353,7 @@ Settings are applied in this priority order (highest to lowest):
 
 **Workflow sets:**
 ```yaml
-- uses: obiwancenobi/ai-code-reviewer@v1.0.12
+- uses: obiwancenobi/ai-code-reviewer@v1.0.14
   with:
     ai-provider: ${{ vars.AI_PROVIDER || 'anthropic' }}
     ai-model: ${{ vars.AI_MODEL || 'claude-3-sonnet' }}
@@ -442,7 +452,7 @@ jobs:
 
     steps:
       - name: AI Code Review
-        uses: obiwancenobi/ai-code-reviewer@v1.0.12
+        uses: obiwancenobi/ai-code-reviewer@v1.0.14
         with:
           pr-number: ${{ github.event.pull_request.number }}
           repository: ${{ github.repository }}
@@ -472,7 +482,7 @@ jobs:
 
     steps:
       - name: AI Code Review
-        uses: obiwancenobi/ai-code-reviewer@v1.0.12
+        uses: obiwancenobi/ai-code-reviewer@v1.0.14
         with:
           pr-number: ${{ github.event.pull_request.number }}
           repository: ${{ github.repository }}
@@ -485,7 +495,7 @@ jobs:
 #### Python Projects
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.12
+  uses: obiwancenobi/ai-code-reviewer@v1.0.14
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -498,7 +508,7 @@ jobs:
 #### Java/.NET Projects
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.12
+  uses: obiwancenobi/ai-code-reviewer@v1.0.14
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -520,7 +530,7 @@ Set these in repository Settings → Actions → Variables:
 
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.12
+  uses: obiwancenobi/ai-code-reviewer@v1.0.14
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
