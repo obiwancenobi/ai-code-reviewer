@@ -573,6 +573,19 @@ curl -fsSL https://raw.githubusercontent.com/obiwancenobi/ai-code-reviewer/main/
 
 This creates workflow examples for different approaches and provides setup guidance.
 
+## ⚠️ Important Considerations
+
+### Data Privacy
+- Code snippets, prompts, and related metadata are transmitted to third-party AI providers, which may log or store this data for their operations.
+- Refrain from including sensitive credentials, proprietary information, or personal data in reviews unless you're confident in the provider's security practices.
+
+### Service Stability
+- External AI services may enforce usage limits, alter their APIs or model behaviors abruptly, or become temporarily unavailable.
+- Treat AI-generated outputs as preliminary suggestions; incorporate manual checks before relying on them in live environments.
+
+### Output Verification
+- AI responses might include factual errors, rely on obsolete information, or fabricate elements not present in the input.
+- Independently validate all recommendations, code modifications, or analyses provided by the AI before integration.
 ## 📞 Support
 
 - 📖 [Quick Start Guide](specs/001-ai-code-review/quickstart.md)
