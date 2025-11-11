@@ -416,25 +416,6 @@ jobs:
 - **Chunking**: Automatic splitting for large files
 - **Concurrency**: Parallel file processing with rate limiting and error resilience
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Built with [Node.js](https://nodejs.org/)
-- Powered by multiple AI providers
-- Integrated with [GitHub Actions](https://github.com/features/actions)
-- Notifications via [Discord](https://discord.com/)
-
 ## 🔄 Usage Examples
 
 ### Basic Usage (Any Repository)
@@ -586,6 +567,26 @@ This creates workflow examples for different approaches and provides setup guida
 ### Output Verification
 - AI responses might include factual errors, rely on obsolete information, or fabricate elements not present in the input.
 - Independently validate all recommendations, code modifications, or analyses provided by the AI before integration.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with [Node.js](https://nodejs.org/)
+- Powered by multiple AI providers
+- Integrated with [GitHub Actions](https://github.com/features/actions)
+- Notifications via [Discord](https://discord.com/)
+
 ## 📞 Support
 
 - 📖 [Quick Start Guide](specs/001-ai-code-review/quickstart.md)
