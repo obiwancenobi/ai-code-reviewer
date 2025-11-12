@@ -13,7 +13,7 @@ This data model extends the existing configuration structure to support multiple
 The root "ai" object in ai-review-config.json remains unchanged. New providers are enabled by setting "provider" to one of the supported names.
 
 **Attributes** (unchanged):
-- **provider** (string, required): Now supports "openai", "anthropic", "together-ai", "fireworks-ai", "mistral-ai", "cerebras-ai".
+- **provider** (string, required): Now supports "openai", "anthropic", "together-ai", "fireworks-ai", "mistral-ai", "cerebras".
 - **model** (string, required): Provider-specific model ID (e.g., "gpt-4o" for OpenAI, "meta-llama/Llama-2-70b-chat-hf" for Together AI).
 - **persona** (string, optional): Review persona (e.g., "senior-engineer").
 - **customPersonas** (object, optional): Custom prompt personas.
@@ -54,7 +54,7 @@ Internal object for aiReviewService.js, created from config and file inputs.
 {
   fileContent: "// sample code...",
   filePath: "src/index.js",
-  provider: "cerebras-ai",
+  provider: "cerebras",
   model: "llama-3.1-8b",
   persona: "senior-engineer"
 }
@@ -95,7 +95,7 @@ Unified structure post-normalization.
   - "together-ai": Use @together-ai/sdk, baseUrl "https://api.together.xyz/v1".
   - "fireworks-ai": OpenAI SDK, baseUrl "https://api.fireworks.ai/inference/v1".
   - "mistral-ai": @mistralai/mistralai SDK.
-  - "cerebras-ai": OpenAI SDK, baseUrl "https://api.cerebras.ai/v1".
+  - "cerebras": OpenAI SDK, baseUrl "https://api.cerebras.ai/v1".
 - **API Keys**: Loaded from env vars named after provider (e.g., MISTRAL_API_KEY).
 - **Validation**: On startup, validate model for selected provider; error if invalid.
 

@@ -5,7 +5,7 @@
 **Status**: Complete  
 
 ## Overview
-This document describes the unified interface for AI provider APIs used in code reviews. All new providers (Together AI, Fireworks AI, Mistral AI, Cerebras AI) conform to an OpenAI-compatible Chat Completions schema where possible, with normalization for differences (e.g., Mistral's official SDK). The contract focuses on the `/v1/chat/completions` endpoint for generating review responses. This extends the existing ai-api.yaml from specs/001-ai-code-review/contracts/ai-api.yaml without modifications to that file; new providers are handled via code mapping (baseUrls, SDKs).
+This document describes the unified interface for AI provider APIs used in code reviews. All new providers (Together AI, Fireworks AI, Mistral AI, Cerebras) conform to an OpenAI-compatible Chat Completions schema where possible, with normalization for differences (e.g., Mistral's official SDK). The contract focuses on the `/v1/chat/completions` endpoint for generating review responses. This extends the existing ai-api.yaml from specs/001-ai-code-review/contracts/ai-api.yaml without modifications to that file; new providers are handled via code mapping (baseUrls, SDKs).
 
 ## Common Request Schema (Chat Completion)
 All providers use a POST request to `/v1/chat/completions` (or equivalent).
@@ -37,7 +37,7 @@ All providers use a POST request to `/v1/chat/completions` (or equivalent).
 ```
 
 **Provider-Specific Notes**:
-- **Together AI, Fireworks AI, Cerebras AI**: Fully OpenAI-compatible; use baseUrl override in code.
+- **Together AI, Fireworks AI, Cerebras**: Fully OpenAI-compatible; use baseUrl override in code.
 - **Mistral AI**: Compatible via official SDK; supports similar params but no streaming in some models.
 - **Validation**: Client validates model against provider-specific lists in code.
 

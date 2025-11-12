@@ -18,7 +18,7 @@
 [![Together AI](https://img.shields.io/badge/Together%20AI-FF6B35?logo=ai&logoColor=white)](https://together.ai/)
 [![Fireworks AI](https://img.shields.io/badge/Fireworks%20AI-FF6B35?logo=fireworks&logoColor=white)](https://fireworks.ai/)
 [![Mistral AI](https://img.shields.io/badge/Mistral%20AI-000000?logo=mistral&logoColor=white)](https://mistral.ai/)
-[![Cerebras AI](https://img.shields.io/badge/Cerebras%20AI-000000?logo=ai&logoColor=white)](https://cerebras.ai/)
+[![Cerebras](https://img.shields.io/badge/Cerebras%20-000000?logo=ai&logoColor=white)](https://cerebras.ai/)
 [![Novita](https://img.shields.io/badge/Novita%20-FF6B35?logo=ai&logoColor=white)](https://novita.ai/)
 [![ZenMux](https://img.shields.io/badge/ZenMux%20-FF6B35?logo=ai&logoColor=white)](https://zenmux.ai/)
 [![Atlas Cloud](https://img.shields.io/badge/Atlas%20Cloud%20-4285F4?logo=cloud&logoColor=white)](https://atlascloud.ai/)
@@ -50,7 +50,7 @@ AI-powered code review automation for GitHub pull requests using configurable AI
 
 ## 🚀 Features
 
-- **Multi-Provider AI Support**: OpenAI GPT-4, Anthropic Claude, Google Gemini, DeepSeek, OpenRouter, xAI Grok, Groq, Z.ai, Together AI, Fireworks AI, Mistral AI, Cerebras AI, Novita, ZenMux, Atlas Cloud, Cohere, Minimax, Moonshot, Upstage, and DeepInfra.
+- **Multi-Provider AI Support**: OpenAI GPT-4, Anthropic Claude, Google Gemini, DeepSeek, OpenRouter, xAI Grok, Groq, Z.ai, Together AI, Fireworks AI, Mistral AI, Cerebras, Novita, ZenMux, Atlas Cloud, Cohere, Minimax, Moonshot, Upstage, and DeepInfra.
 - **Configurable Reviewer Personas**: Senior Engineer, Security Expert, Performance Specialist, Accessibility Advocate
 - **Smart File Processing**: Large file chunking, comprehensive exclusion patterns for all major development stacks (164+ patterns)
 - **Discord Notifications**: Real-time status updates for review start, completion, and errors with AI model information
@@ -220,7 +220,7 @@ Use repository variables for organization-wide settings:
 | Together AI | `meta-llama/Llama-2-70b-chat-hf`, `codellama/CodeLlama-7b-Instruct-hf` | `TOGETHER_API_KEY` | ✅ Production |
 | Fireworks AI | `accounts/fireworks/models/llama-v3p1-405b`, `accounts/fireworks/models/mixtral-8x7b-instruct` | `FIREWORKS_API_KEY` | ✅ Production |
 | Mistral AI | `mistral-large-latest`, `open-mistral-7b` | `MISTRAL_API_KEY` | ✅ Production |
-| Cerebras AI | `llama-3.1-8b`, `mixtral-8x7b` | `CEREBRAS_API_KEY` | ✅ Production |
+| Cerebras | `llama-3.1-8b`, `mixtral-8x7b` | `CEREBRAS_API_KEY` | ✅ Production |
 | Novita | `novita-llama-3`, `novita-mistral` | `NOVITA_API_KEY` | ✅ Production |
 | ZenMux | `zenmux-gpt-like`, `zenmux-coder` | `ZENMUX_API_KEY` | ✅ Production |
 | Atlas Cloud | `atlas-gemini-pro`, `atlas-llama` | `ATLAS_CLOUD_API_KEY` | ✅ Production |

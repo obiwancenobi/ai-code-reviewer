@@ -6,7 +6,7 @@
 **Dependencies**: Complete plan.md, research.md, data-model.md, contracts/ai-api.md, quickstart.md  
 
 ## Overview
-These tasks break down the implementation into actionable steps for Code mode. Each task is independent, testable, and follows TDD (write tests first). Focus on extending src/providers/index.js for new providers (Together AI, Fireworks AI, Mistral AI, Cerebras AI) using existing abstraction. Total estimated effort: 1-2 days. Commit after each task; run tests before PR.
+These tasks break down the implementation into actionable steps for Code mode. Each task is independent, testable, and follows TDD (write tests first). Focus on extending src/providers/index.js for new providers (Together AI, Fireworks AI, Mistral AI, Cerebras) using existing abstraction. Total estimated effort: 1-2 days. Commit after each task; run tests before PR.
 
 ## Task List
 
@@ -21,10 +21,10 @@ These tasks break down the implementation into actionable steps for Code mode. E
 - Test: Write unit test for getApiKey() with mocks for new vars; ensure throws error if missing.
 
 ### Task 3: Extend initializeClient() in src/providers/index.js for OpenAI-Compatible Providers
-- Add cases for 'together-ai', 'fireworks-ai', 'cerebras-ai' using OpenAI SDK with custom baseURL:
+- Add cases for 'together-ai', 'fireworks-ai', 'cerebras' using OpenAI SDK with custom baseURL:
   - together-ai: 'https://api.together.xyz/v1'
   - fireworks-ai: 'https://api.fireworks.ai/inference/v1'
-  - cerebras-ai: 'https://api.cerebras.ai/v1'
+  - cerebras: 'https://api.cerebras.ai/v1'
 - Test: Unit tests for each new client initialization; mock OpenAI constructor.
 
 ### Task 4: Add initializeClient() Case for Mistral AI in src/providers/index.js
@@ -33,13 +33,13 @@ These tasks break down the implementation into actionable steps for Code mode. E
 - Test: Unit test for Mistral client creation; verify SDK import.
 
 ### Task 5: Extend generateResponse() in src/providers/index.js for New Providers
-- For OpenAI-compatible (together-ai, fireworks-ai, cerebras-ai): Reuse generateOpenAIResponse().
+- For OpenAI-compatible (together-ai, fireworks-ai, cerebras): Reuse generateOpenAIResponse().
 - For mistral-ai: Add generateMistralResponse() method using client.chat.completions.create() and return content.
 - Update switch in generateResponse() to call new methods.
 - Test: Unit tests for each new response generation; mock API calls, verify normalized output.
 
 ### Task 6: Update Config Validation in src/config/reviewConfig.js
-- Add validation for new provider names in "ai.provider" (together-ai, fireworks-ai, mistral-ai, cerebras-ai).
+- Add validation for new provider names in "ai.provider" (together-ai, fireworks-ai, mistral-ai, cerebras).
 - Validate model against provider-specific lists (hardcoded or from research.md).
 - Test: Unit tests for validator with new providers; ensure rejects invalid models.
 
@@ -72,7 +72,7 @@ These tasks break down the implementation into actionable steps for Code mode. E
 - All tests pass (npm test).
 - No breaking changes (existing providers work).
 - Code follows ESLint/Prettier.
-- Commit message: "feat: add support for Together AI, Fireworks AI, Mistral AI, Cerebras AI".
+- Commit message: "feat: add support for Together AI, Fireworks AI, Mistral AI, Cerebras".
 - Ready for PR and GitHub workflow deployment.
 
 **Tasks Complete**: Proceed to Code mode for execution.

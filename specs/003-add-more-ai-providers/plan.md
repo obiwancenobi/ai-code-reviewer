@@ -19,7 +19,7 @@
 - **Change**: Append new providers to the enum array in lowercase kebab-case for consistency (e.g., 'novita-ai').
 - **Code Snippet**:
   ```js
-  provider: { type: 'string', required: true, enum: ['openai', 'anthropic', 'google', 'deepseek', 'openrouter', 'xai', 'groq', 'zai', 'together-ai', 'fireworks-ai', 'mistral-ai', 'cerebras-ai', 'novita', 'zenmux', 'atlas-cloud', 'cohere', 'minimax', 'moonshot', 'upstage', 'deepinfra'] },
+  provider: { type: 'string', required: true, enum: ['openai', 'anthropic', 'google', 'deepseek', 'openrouter', 'xai', 'groq', 'zai', 'together-ai', 'fireworks-ai', 'mistral-ai', 'cerebras', 'novita', 'zenmux', 'atlas-cloud', 'cohere', 'minimax', 'moonshot', 'upstage', 'deepinfra'] },
   ```
 - **Impact**: Enables configuration validation for new providers. Update `getAvailableProviders()` to reflect this (automatic via schema).
 - **Validation**: Ensure `validate()` method checks against the expanded enum without errors.

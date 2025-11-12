@@ -76,9 +76,9 @@ describe('AIProvider', () => {
       });
     });
 
-    it('should initialize Cerebras AI client with OpenAI SDK', () => {
-      const newConfig = { ...config, ai: { ...config.ai, provider: 'cerebras-ai' } };
-      const provider = new AIProvider('cerebras-ai', newConfig);
+    it('should initialize Cerebras client with OpenAI SDK', () => {
+      const newConfig = { ...config, ai: { ...config.ai, provider: 'cerebras' } };
+      const provider = new AIProvider('cerebras', newConfig);
       expect(provider.client).toBeInstanceOf(MockOpenAI);
       expect(MockOpenAI).toHaveBeenCalledWith({
         apiKey: 'test-cerebras-key',

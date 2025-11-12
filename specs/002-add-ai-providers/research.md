@@ -5,7 +5,7 @@
 **Status**: Complete  
 
 ## Overview
-This research evaluates the integration of four new AI providers (Together AI, Fireworks AI, Mistral AI, Cerebras AI) into the existing AI code reviewer tool. The tool currently uses OpenAI and Anthropic SDKs for generating code reviews. The goal is to extend the `aiReviewService.js` to support these providers while maintaining a unified interface for routing requests and normalizing responses. Key considerations include API compatibility, SDK availability for Node.js, authentication, model support, rate limits, and cost structures.
+This research evaluates the integration of four new AI providers (Together AI, Fireworks AI, Mistral AI, Cerebras) into the existing AI code reviewer tool. The tool currently uses OpenAI and Anthropic SDKs for generating code reviews. The goal is to extend the `aiReviewService.js` to support these providers while maintaining a unified interface for routing requests and normalizing responses. Key considerations include API compatibility, SDK availability for Node.js, authentication, model support, rate limits, and cost structures.
 
 Research sources: Official documentation, SDK repositories, and API references for each provider.
 
@@ -38,7 +38,7 @@ Research sources: Official documentation, SDK repositories, and API references f
 - **Integration Fit**: Moderate compatibility. Add a Mistral client in services, route requests via a provider factory. Normalize responses to extract content and parse for review elements (e.g., issues, fixes).
 - **Potential Challenges**: API differences (e.g., max_tokens behavior); may require custom prompt engineering for consistent outputs. Less mature Node.js SDK compared to OpenAI.
 
-### 4. Cerebras AI
+### 4. Cerebras
 - **API Overview**: OpenAI-compatible API via Inference API (`/v1/chat/completions`), optimized for ultra-fast inference on custom hardware. Supports models like Llama-2, Mixtral.
 - **SDK Support**: No dedicated Node.js SDK; use OpenAI's SDK with base URL `https://api.cerebras.ai/v1` and API key.
 - **Authentication**: API key in headers (`Authorization: Bearer $CEREBRAS_API_KEY`).

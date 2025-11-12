@@ -65,7 +65,7 @@ class AIProvider {
         // Z.ai uses OpenAI-compatible API
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.z.ai/v1'
+          baseURL: 'https://api.z.ai/api/paas/v4'
         });
 
       case 'together-ai':
@@ -82,8 +82,8 @@ class AIProvider {
           baseURL: 'https://api.fireworks.ai/inference/v1'
         });
 
-      case 'cerebras-ai':
-        // Cerebras AI uses OpenAI-compatible API
+      case 'cerebras':
+        // Cerebras uses OpenAI-compatible API
         return new OpenAI({
           apiKey,
           baseURL: 'https://api.cerebras.ai/v1'
@@ -162,7 +162,7 @@ class AIProvider {
       'together-ai': 'TOGETHER_API_KEY',
       'fireworks-ai': 'FIREWORKS_API_KEY',
       'mistral-ai': 'MISTRAL_API_KEY',
-      'cerebras-ai': 'CEREBRAS_API_KEY',
+      'cerebras': 'CEREBRAS_API_KEY',
       novita: 'NOVITA_API_KEY',
       zenmux: 'ZENMUX_API_KEY',
       'atlas-cloud': 'ATLAS_CLOUD_API_KEY',
@@ -273,7 +273,7 @@ Only return the JSON array, no additional text.`;
       case 'zai':
       case 'together-ai':
       case 'fireworks-ai':
-      case 'cerebras-ai':
+      case 'cerebras':
       case 'novita':
       case 'zenmux':
       case 'atlas-cloud':
