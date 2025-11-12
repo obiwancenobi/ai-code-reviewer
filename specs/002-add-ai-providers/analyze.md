@@ -17,7 +17,7 @@ This analysis examines the current codebase for integrating Together AI, Firewor
 - **Services (src/services/aiReviewService.js)**: Routes to AIProvider; normalizes to ReviewResponse. Handles chunking, prompting.
   - Strengths: Provider-agnostic; error retry.
   - Gaps: Log provider selection for debugging.
-- **Workflows (.github/workflows/ai-review.yml)**: Supports ai-provider input, env vars for keys. Uses action obiwancenobi/ai-code-reviewer@v1.0.14.
+- **Workflows (.github/workflows/ai-review.yml)**: Supports ai-provider input, env vars for keys. Uses action obiwancenobi/ai-code-reviewer@v1.0.15.
   - Strengths: Customizable; secrets for keys.
   - Gaps: Add new env vars to secrets list in docs.
 - **Tests (tests/)**: Unit for providers, integration for flows. Coverage good for existing.

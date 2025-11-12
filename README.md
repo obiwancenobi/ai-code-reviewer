@@ -86,7 +86,7 @@ Add AI code review to any repository with one simple step:
 
        steps:
          - name: AI Code Review
-           uses: obiwancenobi/ai-code-reviewer@v1.0.14
+           uses: obiwancenobi/ai-code-reviewer@v1.0.15
            with:
              pr-number: ${{ github.event.pull_request.number }}
              repository: ${{ github.repository }}
@@ -122,7 +122,7 @@ Use repository variables for organization-wide settings:
 
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.14
+  uses: obiwancenobi/ai-code-reviewer@v1.0.15
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -369,7 +369,7 @@ Settings are applied in this priority order (highest to lowest):
 
 **Workflow sets:**
 ```yaml
-- uses: obiwancenobi/ai-code-reviewer@v1.0.14
+- uses: obiwancenobi/ai-code-reviewer@v1.0.15
   with:
     ai-provider: ${{ vars.AI_PROVIDER || 'anthropic' }}
     ai-model: ${{ vars.AI_MODEL || 'claude-3-sonnet' }}
@@ -449,7 +449,7 @@ jobs:
 
     steps:
       - name: AI Code Review
-        uses: obiwancenobi/ai-code-reviewer@v1.0.14
+        uses: obiwancenobi/ai-code-reviewer@v1.0.15
         with:
           pr-number: ${{ github.event.pull_request.number }}
           repository: ${{ github.repository }}
@@ -479,7 +479,7 @@ jobs:
 
     steps:
       - name: AI Code Review
-        uses: obiwancenobi/ai-code-reviewer@v1.0.14
+        uses: obiwancenobi/ai-code-reviewer@v1.0.15
         with:
           pr-number: ${{ github.event.pull_request.number }}
           repository: ${{ github.repository }}
@@ -492,7 +492,7 @@ jobs:
 #### Python Projects
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.14
+  uses: obiwancenobi/ai-code-reviewer@v1.0.15
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -505,7 +505,7 @@ jobs:
 #### Java/.NET Projects
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.14
+  uses: obiwancenobi/ai-code-reviewer@v1.0.15
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -527,7 +527,7 @@ Set these in repository Settings → Actions → Variables:
 
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.14
+  uses: obiwancenobi/ai-code-reviewer@v1.0.15
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -583,6 +583,67 @@ This creates workflow examples for different approaches and provides setup guida
 ### Output Verification
 - AI responses might include factual errors, rely on obsolete information, or fabricate elements not present in the input.
 - Independently validate all recommendations, code modifications, or analyses provided by the AI before integration.
+
+## 🛠️ Troubleshooting
+
+### Common Issues and Solutions
+
+#### 1. **API Key Errors**
+- **Error**: "Missing API key for [provider]. Set [ENV_VAR] environment variable."
+  - **Solution**: Ensure the correct environment variable is set in GitHub Secrets (e.g., `OPENAI_API_KEY`, `COHERE_API_KEY`). Verify the variable name matches the provider exactly.
+- **Error**: "Invalid API key" or 401 Unauthorized.
+  - **Solution**: Double-check the API key from the provider dashboard. Regenerate if necessary and update the secret.
+
+#### 2. **Provider Not Supported**
+- **Error**: "Unsupported AI provider: [provider]"
+  - **Solution**: Confirm the provider name in `ai-review-config.json` or workflow inputs matches the enum (e.g., 'cohere-ai', not 'cohere'). Check the [Supported AI Providers table](#supported-ai-providers) for exact names.
+
+#### 3. **Rate Limit Exceeded**
+- **Error**: 429 Too Many Requests or similar from AI provider.
+  - **Solution**: Wait and retry, or upgrade to a higher tier on the provider. The tool includes retry logic (3 attempts), but persistent issues may require adjusting concurrency or using a different provider.
+
+#### 4. **Configuration Validation Failed**
+- **Error**: "Invalid ai.provider" or schema errors in logs.
+  - **Solution**: Run CLI validation: `node index.js validate --config ai-review-config.json`. Fix enum mismatches or missing required fields like `ai.model`.
+
+#### 5. **GitHub Permissions Issues**
+- **Error**: "Resource not accessible by integration" or no comments posted.
+  - **Solution**: Add permissions to workflow:
+    ```yaml
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    ```
+    Ensure `GITHUB_TOKEN` has repo scope.
+
+#### 6. **Discord Webhook Failures**
+- **Error**: "Discord webhook failed" in logs.
+  - **Solution**: Verify `DISCORD_WEBHOOK_URL` secret is correct and the webhook has permissions in the Discord channel. Test with CLI: `node index.js test-discord --webhook-url YOUR_URL`.
+
+#### 7. **Large File or Chunking Problems**
+- **Error**: "File too large" or incomplete reviews.
+  - **Solution**: Increase `processing.maxFileSize` in config (default 1MB). For very large files, adjust `chunkSize` (default 50k tokens). Exclude binary/large files via `excludePatterns`.
+
+#### 8. **JSON Parsing Errors from AI**
+- **Error**: "Failed to parse AI response as JSON" in logs; fallback general comment.
+  - **Solution**: The tool uses robust parsing with fallbacks. If persistent, check provider response format or refine the prompt in custom personas. Test with a simple code snippet.
+
+#### 9. **No Review Comments on PR**
+- **Error**: Workflow succeeds but no comments appear.
+  - **Solution**: Check workflow logs for skipped files (exclusions). Ensure PR is not draft (`if: github.event.pull_request.draft == false`). Verify changed files are code (not docs/images).
+
+#### 10. **Workflow Not Triggering**
+- **Error**: No action runs on PR.
+  - **Solution**: Confirm workflow file in `.github/workflows/` and PR events in `on: pull_request`. Check repository Actions settings for approval if required.
+
+### General Debugging Tips
+- **Enable Debug Logs**: Set `DEBUG=*` env var in workflow for verbose output.
+- **Test Locally**: Use CLI for manual reviews: `node index.js review --pr <number> --repo <owner/repo>`.
+- **Check Provider Status**: Visit provider dashboards for outages or quota issues.
+- **Review Logs**: GitHub Actions logs show detailed errors; search for "AI code review" or provider names.
+
+For persistent issues, open an [issue](https://github.com/obiwancenobi/ai-code-reviewer/issues) with workflow logs and config (redact keys).
 
 ## 🤝 Contributing
 
