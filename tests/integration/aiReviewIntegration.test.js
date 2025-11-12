@@ -187,11 +187,11 @@ describe('AIReviewService Integration', () => {
     const files = [{ filename: 'test.js', status: 'added', size: 1000, patch: 'test' }];
     const prDetails = { number: 303, head: { sha: 'pqr303' } };
 
-    config.ai.provider = 'cerebras-ai';
+    config.ai.provider = 'cerebras';
     service = new AIReviewService(config);
 
     await service.reviewPullRequest(files, prDetails);
 
-    expect(logSpy).toHaveBeenCalledWith('Routing review for test.js to cerebras-ai with model gpt-4');
+    expect(logSpy).toHaveBeenCalledWith('Routing review for test.js to cerebras with model gpt-4');
   });
 });

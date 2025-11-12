@@ -3,7 +3,7 @@
 **Feature Branch**: `002-add-ai-providers`  
 **Created**: 2025-11-10  
 **Status**: Draft  
-**Input**: User description: "add support for more ai providers : 1. Together AI 2. Fireworks AI 3. Mistral AI 4. Cerebras AI"
+**Input**: User description: "add support for more ai providers : 1. Together AI 2. Fireworks AI 3. Mistral AI 4. Cerebras"
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -52,18 +52,18 @@ As a developer, I want to integrate Mistral AI as a provider, so that I can acce
 
 ---
 
-### User Story 4 - Configure and Use Cerebras AI Provider (Priority: P4)
+### User Story 4 - Configure and Use Cerebras Provider (Priority: P4)
 
-As a developer, I want to add Cerebras AI support, so that I can utilize Cerebras' high-performance inference for rapid and large-scale code reviews.
+As a developer, I want to add Cerebras support, so that I can utilize Cerebras' high-performance inference for rapid and large-scale code reviews.
 
 **Why this priority**: Provides advanced performance options for power users, completing the set of new providers and maximizing tool flexibility.
 
-**Independent Test**: Add Cerebras AI setup, execute a review with Cerebras models, and validate speed and accuracy of results.
+**Independent Test**: Add Cerebras setup, execute a review with Cerebras models, and validate speed and accuracy of results.
 
 **Acceptance Scenarios**:
 
-1. **Given** valid Cerebras AI configuration, **When** requesting a review, **Then** the tool uses Cerebras API and delivers results promptly.
-2. **Given** unsupported model selected for Cerebras AI, **When** review starts, **Then** the tool falls back to a supported model or alerts the user.
+1. **Given** valid Cerebras configuration, **When** requesting a review, **Then** the tool uses Cerebras API and delivers results promptly.
+2. **Given** unsupported model selected for Cerebras, **When** review starts, **Then** the tool falls back to a supported model or alerts the user.
 
 ---
 
@@ -77,7 +77,7 @@ As a developer, I want to add Cerebras AI support, so that I can utilize Cerebra
 
 ### Functional Requirements
 
-- **FR-001**: System MUST allow users to input and store API keys securely for Together AI, Fireworks AI, Mistral AI, and Cerebras AI providers.
+- **FR-001**: System MUST allow users to input and store API keys securely for Together AI, Fireworks AI, Mistral AI, and Cerebras providers.
 - **FR-002**: System MUST provide a mechanism to select and configure default models for each new AI provider from their respective supported lists.
 - **FR-003**: System MUST route code review requests to the selected AI provider based on user configuration, ensuring compatibility with existing OpenAI and Anthropic integrations.
 - **FR-004**: System MUST normalize responses from all supported AI providers into a unified code review format, including suggestions, explanations, and severity levels.

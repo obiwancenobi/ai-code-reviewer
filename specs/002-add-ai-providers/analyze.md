@@ -5,7 +5,7 @@
 **Status**: Complete  
 
 ## Overview
-This analysis examines the current codebase for integrating Together AI, Fireworks AI, Mistral AI, and Cerebras AI. It evaluates existing architecture, dependencies, risks, effort, and compatibility with the plan. Analysis based on src/providers/index.js (abstraction layer), ai-review-config.json (config), workflows, and tests. Overall, the codebase is modular and extensible, with low risk for the extension.
+This analysis examines the current codebase for integrating Together AI, Fireworks AI, Mistral AI, and Cerebras. It evaluates existing architecture, dependencies, risks, effort, and compatibility with the plan. Analysis based on src/providers/index.js (abstraction layer), ai-review-config.json (config), workflows, and tests. Overall, the codebase is modular and extensible, with low risk for the extension.
 
 ## Current Architecture Review
 - **Provider Abstraction (src/providers/index.js)**: Central AIProvider class handles initialization, key loading, response generation via switches. Supports 8 providers (OpenAI, Anthropic, Google, DeepSeek, OpenRouter, xAI, Groq, Z.ai). OpenAI-compatible via baseURL; dedicated for Anthropic/Google. Normalization in parseReviewResponse() is robust (JSON parsing with fallback).
@@ -17,7 +17,7 @@ This analysis examines the current codebase for integrating Together AI, Firewor
 - **Services (src/services/aiReviewService.js)**: Routes to AIProvider; normalizes to ReviewResponse. Handles chunking, prompting.
   - Strengths: Provider-agnostic; error retry.
   - Gaps: Log provider selection for debugging.
-- **Workflows (.github/workflows/ai-review.yml)**: Supports ai-provider input, env vars for keys. Uses action obiwancenobi/ai-code-reviewer@v1.0.14.
+- **Workflows (.github/workflows/ai-review.yml)**: Supports ai-provider input, env vars for keys. Uses action obiwancenobi/ai-code-reviewer@v1.0.15.
   - Strengths: Customizable; secrets for keys.
   - Gaps: Add new env vars to secrets list in docs.
 - **Tests (tests/)**: Unit for providers, integration for flows. Coverage good for existing.

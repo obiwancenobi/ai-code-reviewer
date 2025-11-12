@@ -8,7 +8,7 @@
 
 ## Summary
 
-The primary requirement is to extend the AI code reviewer tool to support four additional AI providers: Together AI, Fireworks AI, Mistral AI, and Cerebras AI. This enables users to set the "provider" field in ai-review-config.json to these new names and specify compatible models, with API keys loaded from environment variables (e.g., TOGETHER_API_KEY). The technical approach extends the existing abstraction in src/providers/index.js, which already handles multiple providers via switch statements for client initialization, key loading, and response generation. Add cases for new providers: OpenAI-compatible for Together/Fireworks/Cerebras (reuse OpenAI SDK with baseURL), dedicated SDK for Mistral. This maintains backward compatibility without config schema changes.
+The primary requirement is to extend the AI code reviewer tool to support four additional AI providers: Together AI, Fireworks AI, Mistral AI, and Cerebras. This enables users to set the "provider" field in ai-review-config.json to these new names and specify compatible models, with API keys loaded from environment variables (e.g., TOGETHER_API_KEY). The technical approach extends the existing abstraction in src/providers/index.js, which already handles multiple providers via switch statements for client initialization, key loading, and response generation. Add cases for new providers: OpenAI-compatible for Together/Fireworks/Cerebras (reuse OpenAI SDK with baseURL), dedicated SDK for Mistral. This maintains backward compatibility without config schema changes.
 
 ## Technical Context
 

@@ -65,7 +65,7 @@ class AIProvider {
         // Z.ai uses OpenAI-compatible API
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.z.ai/v1'
+          baseURL: 'https://api.z.ai/api/paas/v4'
         });
 
       case 'together-ai':
@@ -82,8 +82,8 @@ class AIProvider {
           baseURL: 'https://api.fireworks.ai/inference/v1'
         });
 
-      case 'cerebras-ai':
-        // Cerebras AI uses OpenAI-compatible API
+      case 'cerebras':
+        // Cerebras uses OpenAI-compatible API
         return new OpenAI({
           apiKey,
           baseURL: 'https://api.cerebras.ai/v1'
@@ -91,6 +91,54 @@ class AIProvider {
 
       case 'mistral-ai':
         return new Mistral({ apiKey });
+
+      case 'novita':
+        return new OpenAI({
+          apiKey,
+          baseURL: 'https://api.novita.ai/openai'
+        });
+
+      case 'zenmux':
+        return new OpenAI({
+          apiKey,
+          baseURL: 'https://zenmux.ai/api/v1/chat/completions'
+        });
+
+      case 'atlas-cloud':
+        return new OpenAI({
+          apiKey,
+          baseURL: 'https://api.atlascloud.ai/api/v1/chat/completions'
+        });
+
+      case 'cohere':
+        return new OpenAI({
+          apiKey,
+          baseURL: 'https://api.cohere.ai/compatibility/v1'
+        });
+
+      case 'minimax':
+        return new OpenAI({
+          apiKey,
+          baseURL: 'https://api.minimax.io/v1'
+        });
+
+      case 'moonshot':
+        return new OpenAI({
+          apiKey,
+          baseURL: 'https://api.moonshot.ai/v1'
+        });
+
+      case 'upstage':
+        return new OpenAI({
+          apiKey,
+          baseURL: 'https://api.upstage.ai/v1'
+        });
+
+      case 'deepinfra':
+        return new OpenAI({
+          apiKey,
+          baseURL: 'https://api.deepinfra.com/v1/openai'
+        });
 
       default:
         throw new Error(`Unsupported AI provider: ${this.provider}`);
@@ -114,7 +162,15 @@ class AIProvider {
       'together-ai': 'TOGETHER_API_KEY',
       'fireworks-ai': 'FIREWORKS_API_KEY',
       'mistral-ai': 'MISTRAL_API_KEY',
-      'cerebras-ai': 'CEREBRAS_API_KEY'
+      'cerebras': 'CEREBRAS_API_KEY',
+      novita: 'NOVITA_API_KEY',
+      zenmux: 'ZENMUX_API_KEY',
+      'atlas-cloud': 'ATLAS_CLOUD_API_KEY',
+      cohere: 'COHERE_API_KEY',
+      minimax: 'MINIMAX_API_KEY',
+      moonshot: 'MOONSHOT_API_KEY',
+      upstage: 'UPSTAGE_API_KEY',
+      deepinfra: 'DEEPINFRA_API_KEY'
     };
 
     const envVar = keyMap[this.provider];
@@ -217,7 +273,15 @@ Only return the JSON array, no additional text.`;
       case 'zai':
       case 'together-ai':
       case 'fireworks-ai':
-      case 'cerebras-ai':
+      case 'cerebras':
+      case 'novita':
+      case 'zenmux':
+      case 'atlas-cloud':
+      case 'cohere':
+      case 'minimax':
+      case 'moonshot':
+      case 'upstage':
+      case 'deepinfra':
         return await this.generateOpenAIResponse(prompt);
 
       case 'anthropic':

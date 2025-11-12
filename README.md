@@ -18,7 +18,15 @@
 [![Together AI](https://img.shields.io/badge/Together%20AI-FF6B35?logo=ai&logoColor=white)](https://together.ai/)
 [![Fireworks AI](https://img.shields.io/badge/Fireworks%20AI-FF6B35?logo=fireworks&logoColor=white)](https://fireworks.ai/)
 [![Mistral AI](https://img.shields.io/badge/Mistral%20AI-000000?logo=mistral&logoColor=white)](https://mistral.ai/)
-[![Cerebras AI](https://img.shields.io/badge/Cerebras%20AI-000000?logo=ai&logoColor=white)](https://cerebras.ai/)
+[![Cerebras](https://img.shields.io/badge/Cerebras%20-000000?logo=ai&logoColor=white)](https://cerebras.ai/)
+[![Novita](https://img.shields.io/badge/Novita%20-FF6B35?logo=ai&logoColor=white)](https://novita.ai/)
+[![ZenMux](https://img.shields.io/badge/ZenMux%20-FF6B35?logo=ai&logoColor=white)](https://zenmux.ai/)
+[![Atlas Cloud](https://img.shields.io/badge/Atlas%20Cloud%20-4285F4?logo=cloud&logoColor=white)](https://atlascloud.ai/)
+[![Cohere](https://img.shields.io/badge/Cohere%20-000000?logo=ai&logoColor=white)](https://cohere.com/)
+[![Minimax](https://img.shields.io/badge/Minimax%20-FF6B35?logo=ai&logoColor=white)](https://minimax.io/)
+[![Moonshot](https://img.shields.io/badge/Moonshot%20-000000?logo=moon&logoColor=white)](https://moonshot.ai/)
+[![Upstage](https://img.shields.io/badge/Upstage%20-FF6B35?logo=ai&logoColor=white)](https://upstage.ai/)
+[![DeepInfra](https://img.shields.io/badge/DeepInfra%20-4285F4?logo=cloud&logoColor=white)](https://deepinfra.com/)
 
 AI-powered code review automation for GitHub pull requests using configurable AI models and reviewer personas.
 
@@ -42,7 +50,7 @@ AI-powered code review automation for GitHub pull requests using configurable AI
 
 ## 🚀 Features
 
-- **Multi-Provider AI Support**: OpenAI GPT-4, Anthropic Claude, Google Gemini, DeepSeek, OpenRouter, xAI Grok, Groq, Z.ai, Together AI, Fireworks AI, Mistral AI, and Cerebras.
+- **Multi-Provider AI Support**: OpenAI GPT-4, Anthropic Claude, Google Gemini, DeepSeek, OpenRouter, xAI Grok, Groq, Z.ai, Together AI, Fireworks AI, Mistral AI, Cerebras, Novita, ZenMux, Atlas Cloud, Cohere, Minimax, Moonshot, Upstage, and DeepInfra.
 - **Configurable Reviewer Personas**: Senior Engineer, Security Expert, Performance Specialist, Accessibility Advocate
 - **Smart File Processing**: Large file chunking, comprehensive exclusion patterns for all major development stacks (164+ patterns)
 - **Discord Notifications**: Real-time status updates for review start, completion, and errors with AI model information
@@ -78,7 +86,7 @@ Add AI code review to any repository with one simple step:
 
        steps:
          - name: AI Code Review
-           uses: obiwancenobi/ai-code-reviewer@v1.0.14
+           uses: obiwancenobi/ai-code-reviewer@v1.0.15
            with:
              pr-number: ${{ github.event.pull_request.number }}
              repository: ${{ github.repository }}
@@ -114,7 +122,7 @@ Use repository variables for organization-wide settings:
 
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.14
+  uses: obiwancenobi/ai-code-reviewer@v1.0.15
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -212,7 +220,15 @@ Use repository variables for organization-wide settings:
 | Together AI | `meta-llama/Llama-2-70b-chat-hf`, `codellama/CodeLlama-7b-Instruct-hf` | `TOGETHER_API_KEY` | ✅ Production |
 | Fireworks AI | `accounts/fireworks/models/llama-v3p1-405b`, `accounts/fireworks/models/mixtral-8x7b-instruct` | `FIREWORKS_API_KEY` | ✅ Production |
 | Mistral AI | `mistral-large-latest`, `open-mistral-7b` | `MISTRAL_API_KEY` | ✅ Production |
-| Cerebras AI | `llama-3.1-8b`, `mixtral-8x7b` | `CEREBRAS_API_KEY` | ✅ Production |
+| Cerebras | `llama-3.1-8b`, `mixtral-8x7b` | `CEREBRAS_API_KEY` | ✅ Production |
+| Novita | `novita-llama-3`, `novita-mistral` | `NOVITA_API_KEY` | ✅ Production |
+| ZenMux | `zenmux-gpt-like`, `zenmux-coder` | `ZENMUX_API_KEY` | ✅ Production |
+| Atlas Cloud | `atlas-gemini-pro`, `atlas-llama` | `ATLAS_CLOUD_API_KEY` | ✅ Production |
+| Cohere | `command-r`, `command-r-plus` | `COHERE_API_KEY` | ✅ Production |
+| Minimax | `minimax-chat`, `minimax-vision` | `MINIMAX_API_KEY` | ✅ Production |
+| Moonshot | `moonshot-v1-8k`, `moonshot-kimi` | `MOONSHOT_API_KEY` | ✅ Production |
+| Upstage | `solar-10.7b`, `solar-70b` | `UPSTAGE_API_KEY` | ✅ Production |
+| DeepInfra | `deepinfra-llama3`, `deepinfra-mixtral` | `DEEPINFRA_API_KEY` | ✅ Production |
 
 **Note**: Models listed are examples. Users can replace with any supported model for the provider as per their documentation and preferences.
 
@@ -324,7 +340,7 @@ The system automatically excludes common build artifacts and dependencies:
 ## 🔑 Required Secrets
 
 - `GITHUB_TOKEN`: Automatically provided by GitHub Actions
-- One AI provider API key: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, etc.
+- One AI provider API key: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_AI_API_KEY`, `DEEPSEEK_API_KEY`, `OPENROUTER_API_KEY`, `XAI_API_KEY`, `GROQ_API_KEY`, `ZAI_API_KEY`, `TOGETHER_API_KEY`, `FIREWORKS_API_KEY`, `MISTRAL_API_KEY`, `CEREBRAS_API_KEY`, `NOVITA_API_KEY`, `ZENMUX_API_KEY`, `ATLAS_CLOUD_API_KEY`, `COHERE_API_KEY`, `MINIMAX_API_KEY`, `MOONSHOT_API_KEY`, `UPSTAGE_API_KEY`, `DEEPINFRA_API_KEY`
 - `DISCORD_WEBHOOK_URL`: Optional, for notifications
 
 ## ⚙️ Configuration Priority
@@ -353,7 +369,7 @@ Settings are applied in this priority order (highest to lowest):
 
 **Workflow sets:**
 ```yaml
-- uses: obiwancenobi/ai-code-reviewer@v1.0.14
+- uses: obiwancenobi/ai-code-reviewer@v1.0.15
   with:
     ai-provider: ${{ vars.AI_PROVIDER || 'anthropic' }}
     ai-model: ${{ vars.AI_MODEL || 'claude-3-sonnet' }}
@@ -433,7 +449,7 @@ jobs:
 
     steps:
       - name: AI Code Review
-        uses: obiwancenobi/ai-code-reviewer@v1.0.14
+        uses: obiwancenobi/ai-code-reviewer@v1.0.15
         with:
           pr-number: ${{ github.event.pull_request.number }}
           repository: ${{ github.repository }}
@@ -463,7 +479,7 @@ jobs:
 
     steps:
       - name: AI Code Review
-        uses: obiwancenobi/ai-code-reviewer@v1.0.14
+        uses: obiwancenobi/ai-code-reviewer@v1.0.15
         with:
           pr-number: ${{ github.event.pull_request.number }}
           repository: ${{ github.repository }}
@@ -476,7 +492,7 @@ jobs:
 #### Python Projects
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.14
+  uses: obiwancenobi/ai-code-reviewer@v1.0.15
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -489,7 +505,7 @@ jobs:
 #### Java/.NET Projects
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.14
+  uses: obiwancenobi/ai-code-reviewer@v1.0.15
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -511,7 +527,7 @@ Set these in repository Settings → Actions → Variables:
 
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.14
+  uses: obiwancenobi/ai-code-reviewer@v1.0.15
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -567,6 +583,67 @@ This creates workflow examples for different approaches and provides setup guida
 ### Output Verification
 - AI responses might include factual errors, rely on obsolete information, or fabricate elements not present in the input.
 - Independently validate all recommendations, code modifications, or analyses provided by the AI before integration.
+
+## 🛠️ Troubleshooting
+
+### Common Issues and Solutions
+
+#### 1. **API Key Errors**
+- **Error**: "Missing API key for [provider]. Set [ENV_VAR] environment variable."
+  - **Solution**: Ensure the correct environment variable is set in GitHub Secrets (e.g., `OPENAI_API_KEY`, `COHERE_API_KEY`). Verify the variable name matches the provider exactly.
+- **Error**: "Invalid API key" or 401 Unauthorized.
+  - **Solution**: Double-check the API key from the provider dashboard. Regenerate if necessary and update the secret.
+
+#### 2. **Provider Not Supported**
+- **Error**: "Unsupported AI provider: [provider]"
+  - **Solution**: Confirm the provider name in `ai-review-config.json` or workflow inputs matches the enum (e.g., 'cohere-ai', not 'cohere'). Check the [Supported AI Providers table](#supported-ai-providers) for exact names.
+
+#### 3. **Rate Limit Exceeded**
+- **Error**: 429 Too Many Requests or similar from AI provider.
+  - **Solution**: Wait and retry, or upgrade to a higher tier on the provider. The tool includes retry logic (3 attempts), but persistent issues may require adjusting concurrency or using a different provider.
+
+#### 4. **Configuration Validation Failed**
+- **Error**: "Invalid ai.provider" or schema errors in logs.
+  - **Solution**: Run CLI validation: `node index.js validate --config ai-review-config.json`. Fix enum mismatches or missing required fields like `ai.model`.
+
+#### 5. **GitHub Permissions Issues**
+- **Error**: "Resource not accessible by integration" or no comments posted.
+  - **Solution**: Add permissions to workflow:
+    ```yaml
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    ```
+    Ensure `GITHUB_TOKEN` has repo scope.
+
+#### 6. **Discord Webhook Failures**
+- **Error**: "Discord webhook failed" in logs.
+  - **Solution**: Verify `DISCORD_WEBHOOK_URL` secret is correct and the webhook has permissions in the Discord channel. Test with CLI: `node index.js test-discord --webhook-url YOUR_URL`.
+
+#### 7. **Large File or Chunking Problems**
+- **Error**: "File too large" or incomplete reviews.
+  - **Solution**: Increase `processing.maxFileSize` in config (default 1MB). For very large files, adjust `chunkSize` (default 50k tokens). Exclude binary/large files via `excludePatterns`.
+
+#### 8. **JSON Parsing Errors from AI**
+- **Error**: "Failed to parse AI response as JSON" in logs; fallback general comment.
+  - **Solution**: The tool uses robust parsing with fallbacks. If persistent, check provider response format or refine the prompt in custom personas. Test with a simple code snippet.
+
+#### 9. **No Review Comments on PR**
+- **Error**: Workflow succeeds but no comments appear.
+  - **Solution**: Check workflow logs for skipped files (exclusions). Ensure PR is not draft (`if: github.event.pull_request.draft == false`). Verify changed files are code (not docs/images).
+
+#### 10. **Workflow Not Triggering**
+- **Error**: No action runs on PR.
+  - **Solution**: Confirm workflow file in `.github/workflows/` and PR events in `on: pull_request`. Check repository Actions settings for approval if required.
+
+### General Debugging Tips
+- **Enable Debug Logs**: Set `DEBUG=*` env var in workflow for verbose output.
+- **Test Locally**: Use CLI for manual reviews: `node index.js review --pr <number> --repo <owner/repo>`.
+- **Check Provider Status**: Visit provider dashboards for outages or quota issues.
+- **Review Logs**: GitHub Actions logs show detailed errors; search for "AI code review" or provider names.
+
+For persistent issues, open an [issue](https://github.com/obiwancenobi/ai-code-reviewer/issues) with workflow logs and config (redact keys).
 
 ## 🤝 Contributing
 

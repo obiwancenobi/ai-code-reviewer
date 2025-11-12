@@ -5,7 +5,7 @@
 **Status**: Complete  
 
 ## Overview
-This quickstart guides users on setting up and using the new AI providers (Together AI, Fireworks AI, Mistral AI, Cerebras AI) in the AI code reviewer tool. It reuses the existing ai-review-config.json format. Set the "provider" field to the new provider name and "model" to a valid model ID for that provider. API keys are loaded from environment variables. No schema changes or new fields required.
+This quickstart guides users on setting up and using the new AI providers (Together AI, Fireworks AI, Mistral AI, Cerebras) in the AI code reviewer tool. It reuses the existing ai-review-config.json format. Set the "provider" field to the new provider name and "model" to a valid model ID for that provider. API keys are loaded from environment variables. No schema changes or new fields required.
 
 ## Prerequisites
 - Node.js 18+ installed.
@@ -17,7 +17,7 @@ This quickstart guides users on setting up and using the new AI providers (Toget
 1. **Together AI**: Sign up at [together.ai](https://together.ai), get API key from dashboard.
 2. **Fireworks AI**: Register at [fireworks.ai](https://fireworks.ai), generate key in API section.
 3. **Mistral AI**: Create account at [mistral.ai](https://mistral.ai), retrieve key from console.
-4. **Cerebras AI**: Apply for beta access at [cerebras.ai](https://cerebras.ai), get key upon approval.
+4. **Cerebras**: Apply for beta access at [cerebras.ai](https://cerebras.ai), get key upon approval.
 
 Set keys as environment variables (required for security):
 ```bash
@@ -45,7 +45,7 @@ Edit `ai-review-config.json` using the existing structure. Change "provider" to 
 **Examples for Other Providers**:
 - **Fireworks AI**: `"provider": "fireworks-ai"`, `"model": "accounts/fireworks/models/llama-v3p1-405b"`
 - **Mistral AI**: `"provider": "mistral-ai"`, `"model": "mistral-large-latest"`
-- **Cerebras AI**: `"provider": "cerebras-ai"`, `"model": "llama-3.1-8b"`
+- **Cerebras**: `"provider": "cerebras"`, `"model": "llama-3.1-8b"`
 
 - Use valid models from provider docs (see research.md).
 - The tool maps providers internally (e.g., base URLs, SDKs).
