@@ -8,7 +8,7 @@ class ReviewConfig {
   constructor() {
     this.schema = {
       ai: {
-        provider: { type: 'string', required: true, enum: ['openai', 'anthropic', 'google', 'deepseek', 'openrouter', 'xai', 'groq', 'zai', 'together-ai', 'fireworks-ai', 'mistral-ai', 'cerebras-ai'] },
+        provider: { type: 'string', required: true, enum: ['openai', 'anthropic', 'google', 'deepseek', 'openrouter', 'xai', 'groq', 'zai', 'together-ai', 'fireworks-ai', 'mistral-ai', 'cerebras-ai', 'novita', 'zenmux', 'atlas-cloud', 'cohere', 'minimax', 'moonshot', 'upstage', 'deepinfra'] },
         model: { type: 'string', required: true },
         persona: { type: 'string', required: false, default: 'senior-engineer' }
       },
@@ -158,7 +158,15 @@ class ReviewConfig {
       'together-ai': ['meta-llama/Llama-2-70b-chat-hf', 'codellama/CodeLlama-7b-Instruct-hf'],
       'fireworks-ai': ['accounts/fireworks/models/llama-v3p1-405b', 'accounts/fireworks/models/mixtral-8x7b-instruct'],
       'mistral-ai': ['mistral-large-latest', 'open-mistral-7b'],
-      'cerebras-ai': ['llama-3.1-8b', 'mixtral-8x7b']
+      'cerebras-ai': ['llama-3.1-8b', 'mixtral-8x7b'],
+      novita: ['novita-llama-3', 'novita-mistral'],
+      zenmux: ['zenmux-gpt-like', 'zenmux-coder'],
+      'atlas-cloud': ['atlas-gemini-pro', 'atlas-llama'],
+      cohere: ['command-r', 'command-r-plus'],
+      minimax: ['minimax-chat', 'minimax-vision'],
+      moonshot: ['moonshot-v1-8k', 'moonshot-kimi'],
+      upstage: ['solar-10.7b', 'solar-70b'],
+      deepinfra: ['deepinfra-llama3', 'deepinfra-mixtral']
     };
 
     return recommendations[provider] || [];

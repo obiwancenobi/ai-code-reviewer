@@ -19,6 +19,14 @@
 [![Fireworks AI](https://img.shields.io/badge/Fireworks%20AI-FF6B35?logo=fireworks&logoColor=white)](https://fireworks.ai/)
 [![Mistral AI](https://img.shields.io/badge/Mistral%20AI-000000?logo=mistral&logoColor=white)](https://mistral.ai/)
 [![Cerebras AI](https://img.shields.io/badge/Cerebras%20AI-000000?logo=ai&logoColor=white)](https://cerebras.ai/)
+[![Novita](https://img.shields.io/badge/Novita%20-FF6B35?logo=ai&logoColor=white)](https://novita.ai/)
+[![ZenMux](https://img.shields.io/badge/ZenMux%20-FF6B35?logo=ai&logoColor=white)](https://zenmux.ai/)
+[![Atlas Cloud](https://img.shields.io/badge/Atlas%20Cloud%20-4285F4?logo=cloud&logoColor=white)](https://atlascloud.ai/)
+[![Cohere](https://img.shields.io/badge/Cohere%20-000000?logo=ai&logoColor=white)](https://cohere.com/)
+[![Minimax](https://img.shields.io/badge/Minimax%20-FF6B35?logo=ai&logoColor=white)](https://minimax.io/)
+[![Moonshot](https://img.shields.io/badge/Moonshot%20-000000?logo=moon&logoColor=white)](https://moonshot.ai/)
+[![Upstage](https://img.shields.io/badge/Upstage%20-FF6B35?logo=ai&logoColor=white)](https://upstage.ai/)
+[![DeepInfra](https://img.shields.io/badge/DeepInfra%20-4285F4?logo=cloud&logoColor=white)](https://deepinfra.com/)
 
 AI-powered code review automation for GitHub pull requests using configurable AI models and reviewer personas.
 
@@ -42,7 +50,7 @@ AI-powered code review automation for GitHub pull requests using configurable AI
 
 ## 🚀 Features
 
-- **Multi-Provider AI Support**: OpenAI GPT-4, Anthropic Claude, Google Gemini, DeepSeek, OpenRouter, xAI Grok, Groq, Z.ai, Together AI, Fireworks AI, Mistral AI, and Cerebras.
+- **Multi-Provider AI Support**: OpenAI GPT-4, Anthropic Claude, Google Gemini, DeepSeek, OpenRouter, xAI Grok, Groq, Z.ai, Together AI, Fireworks AI, Mistral AI, Cerebras AI, Novita, ZenMux, Atlas Cloud, Cohere, Minimax, Moonshot, Upstage, and DeepInfra.
 - **Configurable Reviewer Personas**: Senior Engineer, Security Expert, Performance Specialist, Accessibility Advocate
 - **Smart File Processing**: Large file chunking, comprehensive exclusion patterns for all major development stacks (164+ patterns)
 - **Discord Notifications**: Real-time status updates for review start, completion, and errors with AI model information
@@ -213,6 +221,14 @@ Use repository variables for organization-wide settings:
 | Fireworks AI | `accounts/fireworks/models/llama-v3p1-405b`, `accounts/fireworks/models/mixtral-8x7b-instruct` | `FIREWORKS_API_KEY` | ✅ Production |
 | Mistral AI | `mistral-large-latest`, `open-mistral-7b` | `MISTRAL_API_KEY` | ✅ Production |
 | Cerebras AI | `llama-3.1-8b`, `mixtral-8x7b` | `CEREBRAS_API_KEY` | ✅ Production |
+| Novita | `novita-llama-3`, `novita-mistral` | `NOVITA_API_KEY` | ✅ Production |
+| ZenMux | `zenmux-gpt-like`, `zenmux-coder` | `ZENMUX_API_KEY` | ✅ Production |
+| Atlas Cloud | `atlas-gemini-pro`, `atlas-llama` | `ATLAS_CLOUD_API_KEY` | ✅ Production |
+| Cohere | `command-r`, `command-r-plus` | `COHERE_API_KEY` | ✅ Production |
+| Minimax | `minimax-chat`, `minimax-vision` | `MINIMAX_API_KEY` | ✅ Production |
+| Moonshot | `moonshot-v1-8k`, `moonshot-kimi` | `MOONSHOT_API_KEY` | ✅ Production |
+| Upstage | `solar-10.7b`, `solar-70b` | `UPSTAGE_API_KEY` | ✅ Production |
+| DeepInfra | `deepinfra-llama3`, `deepinfra-mixtral` | `DEEPINFRA_API_KEY` | ✅ Production |
 
 **Note**: Models listed are examples. Users can replace with any supported model for the provider as per their documentation and preferences.
 
@@ -324,7 +340,7 @@ The system automatically excludes common build artifacts and dependencies:
 ## 🔑 Required Secrets
 
 - `GITHUB_TOKEN`: Automatically provided by GitHub Actions
-- One AI provider API key: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, etc.
+- One AI provider API key: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_AI_API_KEY`, `DEEPSEEK_API_KEY`, `OPENROUTER_API_KEY`, `XAI_API_KEY`, `GROQ_API_KEY`, `ZAI_API_KEY`, `TOGETHER_API_KEY`, `FIREWORKS_API_KEY`, `MISTRAL_API_KEY`, `CEREBRAS_API_KEY`, `NOVITA_API_KEY`, `ZENMUX_API_KEY`, `ATLAS_CLOUD_API_KEY`, `COHERE_API_KEY`, `MINIMAX_API_KEY`, `MOONSHOT_API_KEY`, `UPSTAGE_API_KEY`, `DEEPINFRA_API_KEY`
 - `DISCORD_WEBHOOK_URL`: Optional, for notifications
 
 ## ⚙️ Configuration Priority
