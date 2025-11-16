@@ -197,7 +197,19 @@ class ConfigValidator {
       openrouter: ['OPENROUTER_API_KEY'],
       xai: ['XAI_API_KEY'],
       groq: ['GROQ_API_KEY'],
-      zai: ['ZAI_API_KEY']
+      zai: ['ZAI_API_KEY'],
+      'together-ai': ['TOGETHER_API_KEY'],
+      'fireworks-ai': ['FIREWORKS_API_KEY'],
+      'mistral-ai': ['MISTRAL_API_KEY'],
+      'cerebras': ['CEREBRAS_API_KEY'],
+      novita: ['NOVITA_API_KEY'],
+      zenmux: ['ZENMUX_API_KEY'],
+      'atlas-cloud': ['ATLAS_CLOUD_API_KEY'],
+      cohere: ['COHERE_API_KEY'],
+      minimax: ['MINIMAX_API_KEY'],
+      moonshot: ['MOONSHOT_API_KEY'],
+      upstage: ['UPSTAGE_API_KEY'],
+      deepinfra: ['DEEPINFRA_API_KEY']
     };
 
     const requiredVars = providerEnvVars[aiProvider];

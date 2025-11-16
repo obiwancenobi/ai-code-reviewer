@@ -110,7 +110,7 @@ class ConfigManager {
       'dist/**',
       '*.min.js',
       '*.lock',
-      'coverage/**'
+      'coverage/**',
     ];
 
     // Notifications defaults (optional)
@@ -123,9 +123,32 @@ class ConfigManager {
    */
   validateConfig() {
     // Validate AI provider
-    const validProviders = ['openai', 'anthropic', 'google', 'deepseek', 'openrouter', 'xai', 'groq', 'zai'];
+    const validProviders = [
+      'openai',
+      'anthropic',
+      'google',
+      'deepseek',
+      'openrouter',
+      'xai',
+      'groq',
+      'zai',
+      'together-ai',
+      'fireworks-ai',
+      'cerebras',
+      'mistral-ai',
+      'novita',
+      'zenmux',
+      'atlas-cloud',
+      'cohere',
+      'minimax',
+      'moonshot',
+      'upstage',
+      'deepinfra'
+    ];
     if (!validProviders.includes(this.config.ai.provider)) {
-      throw new Error(`Invalid AI provider: ${this.config.ai.provider}. Must be one of: ${validProviders.join(', ')}`);
+      throw new Error(
+        `Invalid AI provider: ${this.config.ai.provider}. Must be one of: ${validProviders.join(', ')}`
+      );
     }
 
     // Validate custom personas if provided
