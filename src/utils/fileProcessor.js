@@ -242,6 +242,9 @@ class FileProcessor {
       // OS files
       '.DS_Store',
       'Thumbs.db',
+
+      '*.json',
+      '*.yml',
     ];
   }
 

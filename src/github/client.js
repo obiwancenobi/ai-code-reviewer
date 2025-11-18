@@ -69,38 +69,80 @@ class GitHubClient {
    * @returns {Promise<Object>} - Created comment
    */
   async createReviewComment(owner, repo, pullNumber, comment) {
-    return await errorHandler.withRetry(
-      async () => {
-        // Skip comments without valid line numbers
-        if (!comment.line || comment.line <= 0) {
-          logger.warn(`Skipping comment for ${comment.path}: invalid line number ${comment.line}`);
-          return null;
-        }
+    // Skip comments without valid line numbers
+    if (!comment.line || comment.line <= 0) {
+      logger.warn(`Skipping comment for ${comment.path}: invalid line number ${comment.line}`);
+      return null;
+    }
 
-        // Get PR details to get the head commit
-        const prResponse = await this.octokit.pulls.get({
-          owner,
-          repo,
-          pull_number: pullNumber
-        });
+    try {
+      // Check if this is likely to fail due to line resolution before making API call
+      if (comment.line > 100000) {
+        logger.info(`Line ${comment.line} in ${comment.path} is too high, will fallback to general comment`);
+        return null;
+      }
 
-        const commitId = prResponse.data.head.sha;
+      // Call GitHub API directly (no retry for validation errors)
+      // Get PR details to get the head commit
+      const prResponse = await this.octokit.pulls.get({
+        owner,
+        repo,
+        pull_number: pullNumber
+      });
 
-        const response = await this.octokit.pulls.createReviewComment({
-          owner,
-          repo,
-          pull_number: pullNumber,
-          body: comment.body,
-          commit_id: commitId,
-          path: comment.path,
-          line: comment.line,
-          side: 'RIGHT'
-        });
-        return response.data;
-      },
-      3,
-      `Create review comment ${owner}/${repo}#${pullNumber}`
-    );
+      const commitId = prResponse.data.head.sha;
+
+      const response = await this.octokit.pulls.createReviewComment({
+        owner,
+        repo,
+        pull_number: pullNumber,
+        body: comment.body,
+        commit_id: commitId,
+        path: comment.path,
+        line: comment.line,
+        side: 'RIGHT'
+      });
+      
+      logger.debug(`Successfully posted inline comment for ${comment.path}:${comment.line}`);
+      return response.data;
+
+    } catch (error) {
+      // Check if this is a line resolution error
+      if (error.status === 422 && error.message && error.message.includes('could not be resolved')) {
+        logger.warn(`Line ${comment.line} in ${comment.path} could not be resolved, will fallback to general comment`);
+        return null; // Return null to indicate fallback needed
+      }
+
+      // For other errors (network, rate limits, etc.), use retry mechanism
+      logger.debug(`Retrying inline comment for ${comment.path}:${comment.line} due to: ${error.message}`);
+      return await errorHandler.withRetry(
+        async () => {
+          const prResponse = await this.octokit.pulls.get({
+            owner,
+            repo,
+            pull_number: pullNumber
+          });
+
+          const commitId = prResponse.data.head.sha;
+
+          const response = await this.octokit.pulls.createReviewComment({
+            owner,
+            repo,
+            pull_number: pullNumber,
+            body: comment.body,
+            commit_id: commitId,
+            path: comment.path,
+            line: comment.line,
+            side: 'RIGHT'
+          });
+          
+          logger.debug(`Successfully posted inline comment on retry for ${comment.path}:${comment.line}`);
+          return response.data;
+        },
+        2, // Reduced retries since we already tried once
+        `Create review comment retry ${owner}/${repo}#${pullNumber}`
+      );
+    }
   }
 
   /**

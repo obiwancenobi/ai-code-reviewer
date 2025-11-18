@@ -23,6 +23,8 @@ class WebhookHandler {
    * @returns {Promise<Object>} - Processing result
    */
   async handleWebhook(payload) {
+    const workflowStartTime = Date.now();
+    
     try {
       logger.info('Received webhook:', payload.action, payload.pull_request?.number);
 
@@ -55,7 +57,7 @@ class WebhookHandler {
       }
 
       // Process the pull request
-      const result = await this.processPullRequest(pr, payload.repository);
+      const result = await this.processPullRequest(pr, payload.repository, workflowStartTime);
 
       // Send Discord notification for completion
       if (this.discordService) {
@@ -65,6 +67,7 @@ class WebhookHandler {
           repository: payload.repository.full_name,
           commentCount: result.comments || 0,  // ← Fixed: was result.comments?.length, should be result.comments (number)
           error: result.error,
+          duration: result.duration,
           aiModel: `${this.config.ai.provider}|${this.config.ai.model}`
         });
       }
@@ -94,7 +97,7 @@ class WebhookHandler {
    * @param {Object} repository - Repository object
    * @returns {Promise<Object>} - Processing result
    */
-  async processPullRequest(pr, repository) {
+  async processPullRequest(pr, repository, workflowStartTime) {
     logger.info(`Processing PR #${pr.number} in ${repository.full_name}`);
 
     try {
@@ -107,10 +110,12 @@ class WebhookHandler {
 
       if (files.length === 0) {
         logger.warn(`No files found in PR #${pr.number}`);
+        const duration = this.formatDuration(Date.now() - workflowStartTime);
         return {
           success: true,
           status: 'no_files',
-          message: 'No files to review'
+          message: 'No files to review',
+          duration
         };
       }
 
@@ -132,17 +137,25 @@ class WebhookHandler {
 
       logger.info(`Review completed for PR #${pr.number}: ${postedComments} comments posted`);
 
+      const duration = this.formatDuration(Date.now() - workflowStartTime);
+
       return {
         success: true,
         status: 'completed',
         comments: postedComments,
         processedFiles: reviewResult.processedFiles,
-        skippedFiles: files.length - reviewResult.processedFiles
+        skippedFiles: files.length - reviewResult.processedFiles,
+        duration
       };
 
     } catch (error) {
       logger.error(`Failed to process PR #${pr.number}:`, error);
-      throw error;
+      const duration = this.formatDuration(Date.now() - workflowStartTime);
+      return {
+        success: false,
+        error: error.message,
+        duration
+      };
     }
   }
 
@@ -161,6 +174,7 @@ class WebhookHandler {
     }
 
     let postedCount = 0;
+    const generalComments = []; // Collect comments that need to fallback to general
 
     for (const comment of comments) {
       try {
@@ -174,24 +188,48 @@ class WebhookHandler {
             side: comment.side || 'RIGHT'
           });
 
-          // Only count if comment was actually posted (not null due to invalid line)
+          // If inline comment succeeded, count it
           if (result !== null) {
             postedCount++;
+            logger.debug(`Posted inline comment ${postedCount}/${comments.length}`);
+          } else {
+            // Line couldn't be resolved, add to general comments fallback
+            logger.info(`Line ${comment.line} in ${comment.path} could not be resolved, will post as general comment`);
+            generalComments.push(comment);
           }
         } else {
-          // Post general comment
-          await this.githubClient.createIssueComment(owner, repo, pullNumber, comment.body);
-          postedCount++;
+          // This is already a general comment
+          generalComments.push(comment);
         }
 
-        logger.debug(`Posted comment ${postedCount}/${comments.length}`);
+        // Small delay to avoid rate limiting between different types
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+      } catch (error) {
+        logger.error(`Failed to post inline comment for ${comment.path}:${comment.line}:`, error.message);
+        
+        // Fallback to general comment if inline comment fails
+        logger.info(`Falling back to general comment for ${comment.path}:${comment.line}`);
+        generalComments.push(comment);
+        
+        // Small delay after error
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    }
+
+    // Post general comments as fallback
+    for (const comment of generalComments) {
+      try {
+        await this.githubClient.createIssueComment(owner, repo, pullNumber,
+          `**AI Review Comment** (${comment.path}${comment.line ? `:${comment.line}` : ''}):\n\n${comment.body}`);
+        postedCount++;
+        logger.debug(`Posted general comment fallback ${postedCount}/${comments.length}`);
 
         // Small delay to avoid rate limiting
         await new Promise(resolve => setTimeout(resolve, 100));
 
       } catch (error) {
-        logger.error(`Failed to post comment:`, error);
-        // Continue with other comments
+        logger.error(`Failed to post general comment fallback:`, error.message);
       }
     }
 
@@ -208,6 +246,25 @@ class WebhookHandler {
            payload.action &&
            payload.pull_request &&
            payload.repository;
+  }
+
+  /**
+   * Format duration in milliseconds to human-readable format
+   * @param {number} durationMs - Duration in milliseconds
+   * @returns {string} - Formatted duration (e.g., "2m 30s")
+   */
+  formatDuration(durationMs) {
+    const totalSeconds = Math.floor(durationMs / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    if (minutes === 0) {
+      return `${seconds}s`;
+    } else if (seconds === 0) {
+      return `${minutes}m`;
+    } else {
+      return `${minutes}m ${seconds}s`;
+    }
   }
 }
 

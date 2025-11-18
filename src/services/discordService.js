@@ -119,6 +119,11 @@ class DiscordService {
             inline: true
           },
           {
+            name: 'Duration',
+            value: notification.duration || 'N/A',
+            inline: true
+          },
+          {
             name: 'AI Model',
             value: notification.aiModel || 'Unknown',
             inline: true
@@ -145,6 +150,11 @@ class DiscordService {
             name: 'Error',
             value: notification.error || 'Unknown error',
             inline: false
+          },
+          {
+            name: 'Duration',
+            value: notification.duration || 'N/A',
+            inline: true
           }
         ];
         break;

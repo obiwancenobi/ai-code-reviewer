@@ -26,6 +26,12 @@ class ErrorHandler {
       } catch (error) {
         lastError = error;
 
+        // Check if this error should not be retried
+        if (!this.isRetryableError(error)) {
+          logger.warn(`${context} failed with non-retryable error (attempt ${attempt}/${retries + 1}):`, error.message);
+          throw error; // Don't retry non-retryable errors
+        }
+
         if (attempt <= retries) {
           const delay = this.baseDelay * Math.pow(2, attempt - 1);
           logger.warn(`${context} failed (attempt ${attempt}/${retries + 1}), retrying in ${delay}ms:`, error.message);
@@ -44,6 +50,15 @@ class ErrorHandler {
    * @returns {boolean} - Whether the error is retryable
    */
   isRetryableError(error) {
+    // Non-retryable validation errors (don't retry these)
+    if (error.status === 422) {
+      const message = error.message?.toLowerCase() || '';
+      // Line resolution errors and other validation errors shouldn't be retried
+      if (message.includes('could not be resolved') || message.includes('validation failed')) {
+        return false;
+      }
+    }
+
     // Network errors, rate limits, temporary server errors
     const retryableStatusCodes = [408, 429, 500, 502, 503, 504];
     const retryableMessages = ['timeout', 'rate limit', 'server error', 'network'];
