@@ -214,7 +214,7 @@ class FileProcessor {
       '.git/**',
 
       // Documentation
-      '*.md',
+      '**/*.md',
       'docs/',
       'README*',
       'CHANGELOG*',
@@ -243,8 +243,8 @@ class FileProcessor {
       '.DS_Store',
       'Thumbs.db',
 
-      '*.json',
-      '*.yml',
+      '**/*.json',
+      '**/*.yml',
     ];
   }
 

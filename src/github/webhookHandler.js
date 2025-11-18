@@ -202,8 +202,8 @@ class WebhookHandler {
           generalComments.push(comment);
         }
 
-        // Small delay to avoid rate limiting between different types
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Delay to avoid GitHub review comment rate limits (was submitted too quickly)
+        await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay between comments
 
       } catch (error) {
         logger.error(`Failed to post inline comment for ${comment.path}:${comment.line}:`, error.message);
@@ -212,8 +212,8 @@ class WebhookHandler {
         logger.info(`Falling back to general comment for ${comment.path}:${comment.line}`);
         generalComments.push(comment);
         
-        // Small delay after error
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Longer delay after error to avoid rate limits
+        await new Promise(resolve => setTimeout(resolve, 3000)); // 3 second delay after errors
       }
     }
 
@@ -225,8 +225,8 @@ class WebhookHandler {
         postedCount++;
         logger.debug(`Posted general comment fallback ${postedCount}/${comments.length}`);
 
-        // Small delay to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Delay to avoid GitHub rate limits for general comments
+        await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5 second delay between general comments
 
       } catch (error) {
         logger.error(`Failed to post general comment fallback:`, error.message);

@@ -378,26 +378,120 @@ Only return the JSON array, no additional text.`;
         cleanResponse = cleanResponse.substring(jsonStart, jsonEnd + 1);
       }
 
-      // Try to extract JSON array from response
-      const jsonMatch = cleanResponse.match(/\[[\s\S]*\]/);
-      if (jsonMatch) {
-        return JSON.parse(jsonMatch[0]);
+      // Try multiple parsing strategies
+      const comments = this.tryParseJSON(cleanResponse);
+      if (comments) {
+        return comments;
       }
 
-      // Fallback: try parsing the entire cleaned response as JSON
-      return JSON.parse(cleanResponse);
+      // If no valid comments found, create a general comment
+      return this.createFallbackComment(response);
     } catch (error) {
       logger.warn('Failed to parse AI response as JSON, returning general comment:', error.message);
-      logger.debug('Raw AI response:', response);
+      logger.debug('Raw AI response length:', response.length);
 
-      // Create a more informative general comment
-      const truncatedResponse = response.substring(0, 500);
-      return [{
-        type: 'general',
-        content: `AI Review Feedback:\n\n${truncatedResponse}${response.length > 500 ? '\n\n[Response truncated]' : ''}`,
-        severity: 'info'
-      }];
+      return this.createFallbackComment(response);
     }
+  }
+
+  /**
+   * Try multiple strategies to parse JSON from response
+   * @param {string} cleanResponse - Cleaned response text
+   * @returns {Array|null} - Parsed comments or null if all strategies fail
+   */
+  tryParseJSON(cleanResponse) {
+    const strategies = [
+      // Strategy 1: Extract JSON array with regex
+      () => {
+        const jsonMatch = cleanResponse.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+          return JSON.parse(jsonMatch[0]);
+        }
+        return null;
+      },
+      
+      // Strategy 2: Try to fix common JSON issues and parse
+      () => {
+        let fixed = cleanResponse
+          .replace(/,\s*}/g, '}') // Remove trailing commas
+          .replace(/,\s*]/g, ']') // Remove trailing commas in arrays
+          .replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":') // Quote unquoted keys
+          .replace(/:\s*'([^']*)'/g, ': "$1"'); // Convert single quotes to double quotes
+        
+        return JSON.parse(fixed);
+      },
+      
+      // Strategy 3: Try to extract individual JSON objects and combine them
+      () => {
+        const objectMatches = cleanResponse.match(/{[^{}]*}/g);
+        if (objectMatches && objectMatches.length > 0) {
+          return objectMatches.map(match => {
+            try {
+              const obj = JSON.parse(match);
+              // Ensure required fields are present
+              return {
+                type: obj.type || 'general',
+                content: obj.content || 'No content provided',
+                severity: obj.severity || 'info',
+                line_number: obj.line_number || null,
+                suggestion: obj.suggestion || null
+              };
+            } catch {
+              return null;
+            }
+          }).filter(Boolean);
+        }
+        return null;
+      }
+    ];
+
+    for (const strategy of strategies) {
+      try {
+        const result = strategy();
+        if (result && Array.isArray(result) && result.length > 0) {
+          return result;
+        }
+      } catch (error) {
+        logger.debug('JSON parsing strategy failed:', error.message);
+        continue;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Create a fallback comment when JSON parsing fails
+   * @param {string} response - Original AI response
+   * @returns {Array} - Array with single fallback comment
+   */
+  createFallbackComment(response) {
+    // Clean and truncate the response
+    const cleanResponse = response
+      .replace(/^```(?:json)?\s*\n?/i, '')
+      .replace(/\n?```\s*$/i, '')
+      .trim();
+
+    const maxLength = 800; // Increased from 500 for better context
+    const truncatedResponse = cleanResponse.substring(0, maxLength);
+    const truncated = cleanResponse.length > maxLength;
+
+    // Split into paragraphs and filter out empty lines
+    const paragraphs = truncatedResponse
+      .split('\n')
+      .filter(line => line.trim().length > 0)
+      .map(line => line.trim());
+
+    const content = paragraphs.length > 0
+      ? `AI Review Feedback:\n\n${paragraphs.join('\n\n')}${truncated ? '\n\n[Response truncated]' : ''}`
+      : `AI Review Feedback:\n\n${truncatedResponse}${truncated ? '\n\n[Response truncated]' : ''}`;
+
+    return [{
+      type: 'general',
+      content,
+      severity: 'info',
+      line_number: null
+    }];
   }
 }
 

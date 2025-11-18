@@ -50,9 +50,15 @@ class ErrorHandler {
    * @returns {boolean} - Whether the error is retryable
    */
   isRetryableError(error) {
-    // Non-retryable validation errors (don't retry these)
+    // Handle GitHub-specific review comment rate limits
     if (error.status === 422) {
       const message = error.message?.toLowerCase() || '';
+      
+      // GitHub review comment rate limit - should be retried
+      if (message.includes('was submitted too quickly')) {
+        return true;
+      }
+      
       // Line resolution errors and other validation errors shouldn't be retried
       if (message.includes('could not be resolved') || message.includes('validation failed')) {
         return false;

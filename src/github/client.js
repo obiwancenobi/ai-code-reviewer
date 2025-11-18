@@ -113,7 +113,13 @@ class GitHubClient {
         return null; // Return null to indicate fallback needed
       }
 
-      // For other errors (network, rate limits, etc.), use retry mechanism
+      // Check if this is a GitHub review comment rate limit error
+      if (error.status === 422 && error.message && error.message.includes('was submitted too quickly')) {
+        logger.warn(`Review comments for ${comment.path}:${comment.line} were submitted too quickly, will fallback to general comment`);
+        return null; // Return null to indicate fallback needed (don't retry review comment rate limits)
+      }
+
+      // For other errors (network, general rate limits, server errors, etc.), use retry mechanism
       logger.debug(`Retrying inline comment for ${comment.path}:${comment.line} due to: ${error.message}`);
       return await errorHandler.withRetry(
         async () => {
