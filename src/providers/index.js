@@ -237,6 +237,8 @@ Please review the following ${language} code and provide specific, actionable fe
 - Performance considerations
 - Security implications
 
+IMPORTANT: Only include comments for MEDIUM to HIGH severity issues. Exclude low-severity informational comments.
+
 Code to review:
 \`\`\`${language}
 ${code}
@@ -249,11 +251,17 @@ Provide your review as a JSON array of comment objects with the following struct
   {
     "type": "inline|general",
     "content": "Your review comment",
-    "severity": "info|warning|error",
+    "severity": "warning|error",
     "line_number": 42,
     "suggestion": "Optional improvement suggestion"
   }
 ]
+
+Severity guidelines:
+- "warning": Medium severity issues (performance concerns, maintainability problems, potential bugs, deviation from best practices)
+- "error": High severity issues (security vulnerabilities, critical bugs, breaking changes, serious architectural problems)
+
+DO NOT include "info" severity comments. Only return comments that warrant immediate attention or improvement.
 
 Only return the JSON array, no additional text.`;
   }

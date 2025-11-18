@@ -50,7 +50,7 @@ class ErrorHandler {
    * @returns {boolean} - Whether the error is retryable
    */
   isRetryableError(error) {
-    // Handle GitHub-specific review comment rate limits
+    // Handle GitHub-specific errors
     if (error.status === 422) {
       const message = error.message?.toLowerCase() || '';
       
@@ -61,6 +61,15 @@ class ErrorHandler {
       
       // Line resolution errors and other validation errors shouldn't be retried
       if (message.includes('could not be resolved') || message.includes('validation failed')) {
+        return false;
+      }
+    }
+
+    // Handle GitHub secondary rate limits (403 errors with specific message)
+    if (error.status === 403) {
+      const message = error.message?.toLowerCase() || '';
+      // Secondary rate limits should not be retried (GitHub blocks for a period)
+      if (message.includes('secondary rate limit') || message.includes('temporarily blocked from content creation')) {
         return false;
       }
     }

@@ -245,6 +245,7 @@ class FileProcessor {
 
       '**/*.json',
       '**/*.yml',
+      '**/*.sql',
     ];
   }
 

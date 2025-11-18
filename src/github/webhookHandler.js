@@ -218,18 +218,30 @@ class WebhookHandler {
     }
 
     // Post general comments as fallback
-    for (const comment of generalComments) {
+    for (let i = 0; i < generalComments.length; i++) {
+      const comment = generalComments[i];
       try {
         await this.githubClient.createIssueComment(owner, repo, pullNumber,
           `**AI Review Comment** (${comment.path}${comment.line ? `:${comment.line}` : ''}):\n\n${comment.body}`);
         postedCount++;
         logger.debug(`Posted general comment fallback ${postedCount}/${comments.length}`);
 
-        // Delay to avoid GitHub rate limits for general comments
-        await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5 second delay between general comments
+        // Conservative delay to avoid GitHub secondary rate limits
+        // Increase delay based on how many comments we've posted
+        const delay = Math.min(3000 + (i * 1000), 10000); // Start at 3s, increase by 1s, max 10s
+        await new Promise(resolve => setTimeout(resolve, delay));
 
       } catch (error) {
         logger.error(`Failed to post general comment fallback:`, error.message);
+        
+        // If it's a secondary rate limit, stop trying to post more comments
+        if (error.status === 403 && error.message?.toLowerCase().includes('secondary rate limit')) {
+          logger.warn('GitHub secondary rate limit hit, stopping further comment attempts');
+          break;
+        }
+        
+        // For other errors, wait longer before trying next comment
+        await new Promise(resolve => setTimeout(resolve, 5000));
       }
     }
 

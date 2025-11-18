@@ -170,7 +170,7 @@ class GitHubClient {
         });
         return response.data;
       },
-      3,
+      2, // Reduced retries for issue comments to avoid secondary rate limits
       `Create issue comment ${owner}/${repo}#${pullNumber}`
     );
   }
