@@ -232,6 +232,7 @@ class FileProcessor {
       // Config files
       '.env*',
       'config/local.*',
+      '**/*.env',
 
       // IDE files
       '.vscode/',
