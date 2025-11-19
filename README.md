@@ -190,6 +190,105 @@ Use repository variables for organization-wide settings:
 }
 ```
 
+### Comment Volume Control
+
+Control the number of AI-generated comments to avoid overwhelming reviews. The system includes intelligent filtering and configurable limits:
+
+#### Default Limits (No Configuration Required)
+
+If you don't specify `commentLimits`, the system uses these intelligent defaults:
+- **Maximum 5 comments** per entire review
+- **Maximum 2 comments** per code chunk
+- **Eliminates low-quality comments** (testing suggestions, style preferences, positive feedback)
+- **Removes "info" severity** comments automatically
+
+#### Custom Comment Limits
+
+Configure comment limits based on your team's needs:
+
+**Strict (Minimal Comments):**
+```json
+{
+  "ai": {
+    "commentLimits": {
+      "maxComments": 3,
+      "maxCommentsPerChunk": 1
+    }
+  }
+}
+```
+*Best for: Security-focused teams, important PRs, senior developer reviews*
+
+**Balanced (Moderate Comments):**
+```json
+{
+  "ai": {
+    "commentLimits": {
+      "maxComments": 7,
+      "maxCommentsPerChunk": 3
+    }
+  }
+}
+```
+*Best for: General development teams, standard code reviews*
+
+**Comprehensive (More Comments):**
+```json
+{
+  "ai": {
+    "commentLimits": {
+      "maxComments": 10,
+      "maxCommentsPerChunk": 4
+    }
+  }
+}
+```
+*Best for: Thorough reviews, large PRs, team learning*
+
+#### Advanced: Custom Personas + Limits
+
+Combine custom personas with strict limits for specialized reviews:
+
+```json
+{
+  "ai": {
+    "persona": "minimal-reviewer",
+    "commentLimits": {
+      "maxComments": 3,
+      "maxCommentsPerChunk": 1
+    },
+    "customPersonas": {
+      "minimal-reviewer": "You are a minimal reviewer focusing ONLY on breaking changes and critical bugs. Maximum 3 comments total.",
+      "security-focused": "You are a security expert focusing ONLY on vulnerabilities and critical bugs. Do not comment on style, documentation, or performance.",
+      "performance-focused": "You are a performance specialist focusing ONLY on performance issues and optimization opportunities."
+    }
+  }
+}
+```
+
+#### Intelligent Comment Filtering
+
+The system automatically filters out:
+- ❌ **"Info" severity comments** (converted to warnings/errors only)
+- ❌ **Low-quality patterns**:
+  - "ensure thorough testing"
+  - "consider discussing with team"  
+  - "might affect functionality"
+  - Style preferences and documentation requests
+- ❌ **Duplicate comments** (similar content)
+- ❌ **Positive feedback** and obvious changes
+
+#### Comment Quality Features
+
+- **Visual Formatting**: Color-coded borders (🚨 red for errors, ⚠️ yellow for warnings)
+- **Rich Content**: Suggestions, code examples, and references included
+- **Emoji Indicators**: Clear visual hierarchy with emojis
+- **Priority Sorting**: Critical issues (errors) appear first
+
+**Before vs After:**
+- **Before**: 20-50+ comments with noise and repetition
+- **After**: 3-10 focused, actionable comments with visual formatting
+
 **Provider-specific examples:**
 
 **Anthropic Claude:**

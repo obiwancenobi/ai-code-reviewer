@@ -285,7 +285,12 @@ class AIProvider {
     return await errorHandler.withRetry(
       async () => {
         const response = await this.generateResponse(systemPrompt, userPrompt);
-        return this.parseReviewResponse(response);
+        let comments = this.parseReviewResponse(response);
+        
+        // Apply comment filtering and limits
+        comments = this.filterAndLimitComments(comments);
+        
+        return comments;
       },
       3,
       `AI code review (${this.provider})`
@@ -303,13 +308,13 @@ class AIProvider {
   buildSystemReviewPrompt(language, persona) {
     const defaultPersonaPrompts = {
       'senior-engineer':
-        'You are a senior software engineer reviewing code for quality, maintainability, and best practices.',
+        'You are a senior software engineer reviewing code for critical issues only.',
       'security-expert':
-        'You are a security expert reviewing code for vulnerabilities, data protection, and secure coding practices.',
+        'You are a security expert reviewing code for security vulnerabilities only.',
       'performance-specialist':
-        'You are a performance specialist reviewing code for efficiency, scalability, and optimization opportunities.',
+        'You are a performance specialist reviewing code for performance issues only.',
       'accessibility-advocate':
-        'You are an accessibility advocate reviewing code for inclusive design and WCAG compliance.',
+        'You are an accessibility advocate reviewing code for accessibility issues only.',
     };
 
     // Check if custom persona prompt is provided in config
@@ -322,78 +327,36 @@ class AIProvider {
 
     return `${systemPrompt}
 
-Please review the following ${language} code and provide specific, actionable feedback. Focus on:
-- Code quality and maintainability
-- Potential bugs or issues
-- Best practices and conventions
-- Performance considerations
-- Security implications
+You are reviewing ${language} code. Be extremely selective and only comment on the most critical issues.
 
-IMPORTANT: Only include comments for MEDIUM to HIGH severity issues. Exclude low-severity informational comments.
+CRITICAL LIMITS:
+- Maximum 3-5 comments per review
+- Only comment on NEW code (lines with "+")
+- Only comment on REMOVED code if it causes problems
+- DO NOT comment on: styling, documentation, testing, obvious changes, or positive feedback
 
-Provide your review as a JSON array of comment objects with the following structure:
+SEVERITY RULES:
+- "error": Security vulnerabilities, critical bugs, data corruption, breaking changes
+- "warning": Performance issues, potential bugs, maintainability problems
+- "info": NEVER use "info" severity
+
+Example output format:
 [
   {
-    "type": "inline|general",
-    "content": "Your review comment",
-    "severity": "warning|error",
+    "content": "Specific issue description",
+    "severity": "warning|error", 
     "line_number": 42,
-    "suggestion": "Optional improvement suggestion"
+    "suggestion": "How to fix it"
   }
 ]
 
-Understanding the diff:
-- Lines starting with "-" (del) show code that was REMOVED
-- Lines starting with "+" (add) show code that was ADDED
-- Lines without prefix (normal) show unchanged context
+Focus on issues that would:
+1. Cause security problems
+2. Break functionality
+3. Cause significant performance issues
+4. Introduce maintainability problems
 
-Severity guidelines:
-- "warning": Medium severity issues (performance concerns, maintainability problems, potential bugs, deviation from best practices)
-- "error": High severity issues (security vulnerabilities, critical bugs, breaking changes, serious architectural problems)
-
-DO NOT include "info" severity comments. Only return comments that warrant immediate attention or improvement.
-
-Only return the JSON array, no additional text.
-
-For the "content" field:
-
-- ONLY add comments for actual issues that need to be addressed
-- DO NOT add comments for:
-  * Compliments or positive feedback
-  * Style preferences
-  * Minor suggestions
-  * Obvious changes
-  * General observations
-  * Ensuring/Confirming intended behavior
-- Each comment must be:
-  * Actionable (something specific that needs to change)
-  * Important enough to discuss
-  * Related to code quality, performance, or correctness
-- Other rules for "content" field:
-  * DO NOT comment on removed lines unless their removal creates a problem:
-    ** Focus your review on:
-      1. New code (lines with "+")
-      2. The impact of changes on existing code
-      3. Potential issues in the new implementation
-    ** For example:
-      - BAD: "This line was removed" (unless removal causes issues)
-      - GOOD: "The new implementation might cause X issue"
-      - GOOD: "Consider adding Y to the new code"
-
-Examples of NOT helpful comments:
-- "The changes may affect the overall layout and functionality on larger screens, so thorough testing is recommended to ensure no regressions occur."
-  Assume that the engineering team will perform UI tests, regression tests, feature tests, etc.
-- "Ensure that the new button section does not interfere with existing elements on larger screens. It may be useful to conduct a visual regression test."
-  Same reason as above.
-- "The change from avgCodes.value to avgCodes.value.toFixed(2) improves precision but may alter user expectations. Consider adding a note in the documentation or user interface to clarify this change."
-  Assume that changes like this are suggested by the product, design, and UX team.
-- "Removing the breadcrumb may hinder navigation. Consider discussing with the team if this is the desired user experience."
-  Same reason as above.
-- "Consider adding a comment explaining..."
-  The code should be self-explanatory.
-
-ABOVE anything else, DO NOT repeat the same comment multiple times. If a comment has already been made in the
-previous iteration, DO NOT repeat it.`;
+Return ONLY the JSON array, no additional text.`;
   }
 
   /**
@@ -667,6 +630,106 @@ ${context ? `Additional context: ${context}` : ''}
         line_number: null,
       },
     ];
+  }
+
+  /**
+   * Filter and limit comments based on configuration and quality criteria
+   * @param {Array} comments - Raw comments from AI
+   * @returns {Array} - Filtered and limited comments
+   */
+  filterAndLimitComments(comments) {
+    if (!comments || !Array.isArray(comments) || comments.length === 0) {
+      return [];
+    }
+
+    // Get limits from config (with defaults)
+    const maxComments = this.config?.commentLimits?.maxComments || 5;
+    const maxCommentsPerChunk = this.config?.commentLimits?.maxCommentsPerChunk || 2;
+    
+    // Step 1: Remove info severity comments (not allowed)
+    let filtered = comments.filter(comment => 
+      comment.severity && comment.severity.toLowerCase() !== 'info'
+    );
+
+    // Step 2: Remove duplicate comments (same content)
+    filtered = this.removeDuplicateComments(filtered);
+
+    // Step 3: Remove low-quality comments
+    filtered = this.removeLowQualityComments(filtered);
+
+    // Step 4: Sort by severity priority
+    filtered = this.sortCommentsByPriority(filtered);
+
+    // Step 5: Limit total comments
+    filtered = filtered.slice(0, maxComments);
+
+    // Step 6: Apply chunk-specific limits (for future chunk-level filtering)
+    return filtered.slice(0, maxCommentsPerChunk);
+  }
+
+  /**
+   * Remove duplicate comments based on content similarity
+   * @param {Array} comments - Comments to deduplicate
+   * @returns {Array} - Deduplicated comments
+   */
+  removeDuplicateComments(comments) {
+    const seen = new Set();
+    return comments.filter(comment => {
+      // Create a simplified hash of the content
+      const contentHash = comment.content
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '')
+        .substring(0, 50); // First 50 chars of cleaned content
+
+      if (seen.has(contentHash)) {
+        return false;
+      }
+      seen.add(contentHash);
+      return true;
+    });
+  }
+
+  /**
+   * Remove low-quality comments that don't provide value
+   * @param {Array} comments - Comments to filter
+   * @returns {Array} - High-quality comments only
+   */
+  removeLowQualityComments(comments) {
+    const lowQualityPatterns = [
+      /ensure.*thorough.*testing/i,
+      /consider.*discuss.*team/i,
+      /might.*affect.*functionality/i,
+      /may.*interfere.*existing/i,
+      /consider.*adding.*comment/i,
+      /the.*change.*improves/i,
+      /the.*change.*alters/i,
+      /the.*change.*affects/i
+    ];
+
+    return comments.filter(comment => {
+      const content = comment.content || '';
+      return !lowQualityPatterns.some(pattern => pattern.test(content));
+    });
+  }
+
+  /**
+   * Sort comments by priority (error first, then warning)
+   * @param {Array} comments - Comments to sort
+   * @returns {Array} - Sorted comments
+   */
+  sortCommentsByPriority(comments) {
+    return comments.sort((a, b) => {
+      const severityOrder = { 'error': 0, 'warning': 1 };
+      const aOrder = severityOrder[a.severity?.toLowerCase()] ?? 2;
+      const bOrder = severityOrder[b.severity?.toLowerCase()] ?? 2;
+      
+      if (aOrder !== bOrder) {
+        return aOrder - bOrder;
+      }
+      
+      // If same severity, sort by line number (earlier lines first)
+      return (a.line_number || 0) - (b.line_number || 0);
+    });
   }
 }
 

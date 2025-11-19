@@ -15,6 +15,20 @@ class CommentFormatter {
       warning: 'WARNING',
       info: 'INFO'
     };
+
+    this.severityBorderColors = {
+      error: '#dc3545', // Red
+      warning: '#ffc107', // Yellow/Orange
+      info: '#007bff' // Blue
+    };
+
+    this.borderStyles = {
+      borderWidth: '2px',
+      borderStyle: 'solid',
+      borderRadius: '6px',
+      padding: '12px',
+      backgroundColor: '#f8f9fa'
+    };
   }
 
   /**
@@ -27,6 +41,7 @@ class CommentFormatter {
     const severity = comment.severity || 'info';
     const emoji = this.severityEmojis[severity] || 'ℹ️';
     const label = this.severityLabels[severity] || 'INFO';
+    const borderColor = this.severityBorderColors[severity] || '#007bff';
 
     let body = `**${emoji} ${label}:** ${this.escapeMarkdown(comment.content)}`;
 
@@ -53,7 +68,10 @@ class CommentFormatter {
     const provider = config.ai?.provider || 'ai';
     body += `\n\n---\n*Reviewed by 🦫 (${persona}) using ${provider}*`;
 
-    return body;
+    // Wrap in HTML div with colored border
+    const borderStyle = `border: ${this.borderStyles.borderWidth} ${this.borderStyles.borderStyle} ${borderColor}; border-radius: ${this.borderStyles.borderRadius}; padding: ${this.borderStyles.padding}; background-color: ${this.borderStyles.backgroundColor};`;
+    
+    return `<div style="${borderStyle}">\n${body}\n</div>`;
   }
 
   /**

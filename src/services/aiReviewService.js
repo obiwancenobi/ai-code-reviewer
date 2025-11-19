@@ -6,11 +6,13 @@ const AIProvider = require('../providers/index');
 const fileProcessor = require('../utils/fileProcessor');
 const logger = require('../utils/logger');
 const errorHandler = require('../utils/errorHandler');
+const CommentFormatter = require('../utils/commentFormatter');
 
 class AIReviewService {
   constructor(config) {
     this.config = config;
     this.aiProvider = new AIProvider(config.ai.provider, config.ai);
+    this.commentFormatter = new CommentFormatter();
     logger.info(`Initialized AIReviewService with provider: ${this.config.ai.provider}, model: ${this.config.ai.model}`);
   }
 
@@ -211,19 +213,8 @@ Chunk: ${chunkIndex + 1}/${totalChunks}`;
    * @returns {string} - Formatted comment body
    */
   formatCommentBody(comment) {
-    // Handle undefined/null severity
-    const severity = comment.severity || 'INFO';
-    let body = `**${severity.toUpperCase()}:** ${comment.content}`;
-
-    if (comment.suggestion) {
-      body += `\n\n**Suggestion:** ${comment.suggestion}`;
-    }
-
-    // Add AI reviewer attribution with model info
-    const aiModel = `${this.config.ai.provider}|${this.config.ai.model}`;
-    body += `\n\n*Reviewed by 🦫 (${this.config.ai.persona}) using ${aiModel}*`;
-
-    return body;
+    // Use the CommentFormatter to create rich formatted comments with emojis
+    return this.commentFormatter.formatComment(comment, this.config);
   }
 
   /**
