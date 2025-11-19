@@ -39,7 +39,7 @@ long_description: |
     review:
       runs-on: ubuntu-latest
       steps:
-        - uses: obiwancenovi/ai-code-reviewer@v1.0.19
+        - uses: obiwancenovi/ai-code-reviewer@v1.0.20
           with:
             pr-number: ${{ github.event.pull_request.number }}
             repository: ${{ github.repository }}
