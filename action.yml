@@ -1,4 +1,4 @@
-name: 'AI Persona Code Review'
+name: 'BugBeaver Code Reviewer'
 description: 'AI-powered code review automation for GitHub pull requests using configurable AI models and reviewer personas.'
 author: 'obiwancenobi'
 inputs:

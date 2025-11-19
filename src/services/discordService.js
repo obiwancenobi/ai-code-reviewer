@@ -99,7 +99,7 @@ class DiscordService {
         break;
 
       case 'review_success':
-        embed.title = '✅ 🦫 review completed!';
+        embed.title = '✅ 🦫 Review completed!';
         embed.description = `Successfully reviewed pull request #${notification.prNumber}`;
         embed.color = 0x27ae60; // Green
         embed.fields = [
