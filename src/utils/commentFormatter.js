@@ -51,7 +51,7 @@ class CommentFormatter {
     // Add AI reviewer attribution
     const persona = config.ai?.persona || 'senior-engineer';
     const provider = config.ai?.provider || 'ai';
-    body += `\n\n---\n*🤖 Reviewed by AI (${persona}) using ${provider}*`;
+    body += `\n\n---\n*Reviewed by 🦫 (${persona}) using ${provider}*`;
 
     return body;
   }
@@ -71,7 +71,7 @@ class CommentFormatter {
     const provider = config.ai?.provider || 'AI';
     const persona = config.ai?.persona || 'senior-engineer';
 
-    let body = `## 🤖 AI Code Review Summary\n\n`;
+    let body = `## 🦫 BugBeaver Code Review Summary\n\n`;
     body += `**Provider:** ${provider} | **Reviewer:** ${persona}\n\n`;
 
     // Summary statistics
@@ -109,7 +109,7 @@ class CommentFormatter {
       }
     });
 
-    body += `---\n*Review completed automatically by AI code reviewer*`;
+    body += `---\n*Review completed automatically by BugBeaver*`;
 
     return body;
   }

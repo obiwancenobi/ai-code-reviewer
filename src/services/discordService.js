@@ -55,14 +55,14 @@ class DiscordService {
     const embed = {
       timestamp: new Date().toISOString(),
       footer: {
-        text: 'AI Code Reviewer'
+        text: '🦫 BugBeaver'
       }
     };
 
     switch (notification.type) {
       case 'review_start':
-        embed.title = '🤖 AI Code Review Started';
-        embed.description = `AI Code Reviewer has started reviewing pull request #${notification.prNumber}`;
+        embed.title = '🦫 is waking up!';
+        embed.description = `BugBeaver has started reviewing pull request #${notification.prNumber}`;
         embed.color = 0x3498db; // Blue
         embed.fields = [
           {
@@ -87,11 +87,11 @@ class DiscordService {
           },
           {
             name: 'Reviewer',
-            value: notification.reviewer || 'AI Code Reviewer',
+            value: notification.reviewer || 'BugBeaver',
             inline: true
           },
           {
-            name: 'AI Model',
+            name: '🤖 AI Model',
             value: notification.aiModel || 'Unknown',
             inline: true
           }
@@ -99,7 +99,7 @@ class DiscordService {
         break;
 
       case 'review_success':
-        embed.title = '✅ AI Code Review Completed';
+        embed.title = '✅ 🦫 review completed!';
         embed.description = `Successfully reviewed pull request #${notification.prNumber}`;
         embed.color = 0x27ae60; // Green
         embed.fields = [
@@ -124,7 +124,7 @@ class DiscordService {
             inline: true
           },
           {
-            name: 'AI Model',
+            name: '🤖 AI Model',
             value: notification.aiModel || 'Unknown',
             inline: true
           }
@@ -132,7 +132,7 @@ class DiscordService {
         break;
 
       case 'review_error':
-        embed.title = '❌ AI Code Review Failed';
+        embed.title = '❌ 🦫 Review Failed';
         embed.description = `Review failed for pull request #${notification.prNumber}`;
         embed.color = 0xe74c3c; // Red
         embed.fields = [
@@ -160,7 +160,7 @@ class DiscordService {
         break;
 
       default:
-        embed.title = '🤖 AI Code Review Notification';
+        embed.title = '🦫 BugBeaver Notification';
         embed.description = 'Unknown notification type';
         embed.color = 0x95a5a6; // Gray
     }

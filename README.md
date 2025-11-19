@@ -271,7 +271,7 @@ AI review comments appear with the GitHub Actions bot identity and include AI mo
 
 **Example comment attribution:**
 ```
-*Reviewed by 🤖 (senior-engineer) using openai/gpt-4*
+*Reviewed by 🦫 (senior-engineer) using openai/gpt-4*
 ```
 
 **Note:** The `author` configuration option was removed as GitHub's API doesn't support custom author association for review comments. Comments will appear as coming from the authenticated user/bot associated with the `GITHUB_TOKEN`.

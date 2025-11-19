@@ -221,7 +221,7 @@ Chunk: ${chunkIndex + 1}/${totalChunks}`;
 
     // Add AI reviewer attribution with model info
     const aiModel = `${this.config.ai.provider}|${this.config.ai.model}`;
-    body += `\n\n*Reviewed by 🤖 (${this.config.ai.persona}) using ${aiModel}*`;
+    body += `\n\n*Reviewed by 🦫 (${this.config.ai.persona}) using ${aiModel}*`;
 
     return body;
   }
