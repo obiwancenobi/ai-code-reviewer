@@ -340,10 +340,10 @@ SEVERITY RULES:
 - "warning": Performance issues, potential bugs, maintainability problems
 - "info": NEVER use "info" severity
 
-Example output format:
+Provide your review as a JSON array of comment objects with the following structure:
 [
   {
-    "type": "inline|general",
+    "type": "inline",
     "content": "Specific issue description",
     "severity": "warning|error", 
     "line_number": 42,
