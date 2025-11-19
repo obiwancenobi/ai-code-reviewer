@@ -1,4 +1,6 @@
-# AI Code Reviewer
+# BugBeaver Code Reviewer
+
+<img src="images/bugbeaver.png" width="200" alt="BugBeaver Logo">
 
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -31,7 +33,7 @@ AI-powered code review automation for GitHub pull requests using configurable AI
 
 ## 📸 Screenshots
 
-### AI Code Review in Action
+### BugBeaver in Action
 
 **Inline Comments on Pull Requests:**
 ![AI Code Review Comments](screenshots/inline_comment_1.png)
