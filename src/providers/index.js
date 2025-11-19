@@ -343,6 +343,7 @@ SEVERITY RULES:
 Example output format:
 [
   {
+    "type": "inline|general",
     "content": "Specific issue description",
     "severity": "warning|error", 
     "line_number": 42,
