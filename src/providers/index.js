@@ -25,119 +25,206 @@ class AIProvider {
 
     switch (this.provider) {
       case 'openai':
-        return new OpenAI({ apiKey });
+        return new OpenAI({
+          apiKey,
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
+        });
 
       case 'anthropic':
-        return new Anthropic({ apiKey });
+        return new Anthropic({
+          apiKey,
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
+        });
 
       case 'google':
-        return new GoogleGenerativeAI(apiKey);
+        return new GoogleGenerativeAI(apiKey, {
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
+        });
 
       case 'deepseek':
         // DeepSeek uses OpenAI-compatible API
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.deepseek.com'
+          baseURL: 'https://api.deepseek.com',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'openrouter':
         // OpenRouter uses OpenAI-compatible API
         return new OpenAI({
           apiKey,
-          baseURL: 'https://openrouter.ai/api/v1'
+          baseURL: 'https://openrouter.ai/api/v1',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'xai':
         // xAI uses OpenAI-compatible API
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.x.ai/v1'
+          baseURL: 'https://api.x.ai/v1',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'groq':
         // Groq uses OpenAI-compatible API
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.groq.com/openai/v1'
+          baseURL: 'https://api.groq.com/openai/v1',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'zai':
         // Z.ai uses OpenAI-compatible API
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.z.ai/api/paas/v4'
+          baseURL: 'https://api.z.ai/api/paas/v4',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'together-ai':
         // Together AI uses OpenAI-compatible API
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.together.xyz/v1'
+          baseURL: 'https://api.together.xyz/v1',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'fireworks-ai':
         // Fireworks AI uses OpenAI-compatible API
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.fireworks.ai/inference/v1'
+          baseURL: 'https://api.fireworks.ai/inference/v1',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'cerebras':
         // Cerebras uses OpenAI-compatible API
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.cerebras.ai/v1'
+          baseURL: 'https://api.cerebras.ai/v1',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'mistral-ai':
-        return new Mistral({ apiKey });
+        return new Mistral({
+          apiKey,
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
+        });
 
       case 'novita':
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.novita.ai/openai'
+          baseURL: 'https://api.novita.ai/openai',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'zenmux':
         return new OpenAI({
           apiKey,
-          baseURL: 'https://zenmux.ai/api/v1/chat/completions'
+          baseURL: 'https://zenmux.ai/api/v1/chat/completions',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'atlas-cloud':
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.atlascloud.ai/api/v1/chat/completions'
+          baseURL: 'https://api.atlascloud.ai/api/v1/chat/completions',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'cohere':
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.cohere.ai/compatibility/v1'
+          baseURL: 'https://api.cohere.ai/compatibility/v1',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'minimax':
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.minimax.io/v1'
+          baseURL: 'https://api.minimax.io/v1',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'moonshot':
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.moonshot.ai/v1'
+          baseURL: 'https://api.moonshot.ai/v1',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'upstage':
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.upstage.ai/v1'
+          baseURL: 'https://api.upstage.ai/v1',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       case 'deepinfra':
         return new OpenAI({
           apiKey,
-          baseURL: 'https://api.deepinfra.com/v1/openai'
+          baseURL: 'https://api.deepinfra.com/v1/openai',
+          defaultHeaders: {
+            'HTTP-Referer': 'https://riffcompiler.com',
+            'X-Title': 'BugBeaver',
+          },
         });
 
       default:
@@ -162,7 +249,7 @@ class AIProvider {
       'together-ai': 'TOGETHER_API_KEY',
       'fireworks-ai': 'FIREWORKS_API_KEY',
       'mistral-ai': 'MISTRAL_API_KEY',
-      'cerebras': 'CEREBRAS_API_KEY',
+      cerebras: 'CEREBRAS_API_KEY',
       novita: 'NOVITA_API_KEY',
       zenmux: 'ZENMUX_API_KEY',
       'atlas-cloud': 'ATLAS_CLOUD_API_KEY',
@@ -170,7 +257,7 @@ class AIProvider {
       minimax: 'MINIMAX_API_KEY',
       moonshot: 'MOONSHOT_API_KEY',
       upstage: 'UPSTAGE_API_KEY',
-      deepinfra: 'DEEPINFRA_API_KEY'
+      deepinfra: 'DEEPINFRA_API_KEY',
     };
 
     const envVar = keyMap[this.provider];
@@ -192,11 +279,12 @@ class AIProvider {
    * @returns {Promise<Array>} - Array of review comments
    */
   async reviewCode(code, language, persona = 'senior-engineer', context = '') {
-    const prompt = this.buildReviewPrompt(code, language, persona, context);
+    const userPrompt = this.buildUserReviewPrompt(code, context);
+    const systemPrompt = this.buildSystemReviewPrompt(language, persona);
 
     return await errorHandler.withRetry(
       async () => {
-        const response = await this.generateResponse(prompt);
+        const response = await this.generateResponse(systemPrompt, userPrompt);
         return this.parseReviewResponse(response);
       },
       3,
@@ -212,12 +300,16 @@ class AIProvider {
    * @param {string} context - Additional context
    * @returns {string} - Formatted prompt
    */
-  buildReviewPrompt(code, language, persona, context) {
+  buildSystemReviewPrompt(language, persona) {
     const defaultPersonaPrompts = {
-      'senior-engineer': 'You are a senior software engineer reviewing code for quality, maintainability, and best practices.',
-      'security-expert': 'You are a security expert reviewing code for vulnerabilities, data protection, and secure coding practices.',
-      'performance-specialist': 'You are a performance specialist reviewing code for efficiency, scalability, and optimization opportunities.',
-      'accessibility-advocate': 'You are an accessibility advocate reviewing code for inclusive design and WCAG compliance.'
+      'senior-engineer':
+        'You are a senior software engineer reviewing code for quality, maintainability, and best practices.',
+      'security-expert':
+        'You are a security expert reviewing code for vulnerabilities, data protection, and secure coding practices.',
+      'performance-specialist':
+        'You are a performance specialist reviewing code for efficiency, scalability, and optimization opportunities.',
+      'accessibility-advocate':
+        'You are an accessibility advocate reviewing code for inclusive design and WCAG compliance.',
     };
 
     // Check if custom persona prompt is provided in config
@@ -239,13 +331,6 @@ Please review the following ${language} code and provide specific, actionable fe
 
 IMPORTANT: Only include comments for MEDIUM to HIGH severity issues. Exclude low-severity informational comments.
 
-Code to review:
-\`\`\`${language}
-${code}
-\`\`\`
-
-${context ? `Additional context: ${context}` : ''}
-
 Provide your review as a JSON array of comment objects with the following structure:
 [
   {
@@ -257,21 +342,85 @@ Provide your review as a JSON array of comment objects with the following struct
   }
 ]
 
+Understanding the diff:
+- Lines starting with "-" (del) show code that was REMOVED
+- Lines starting with "+" (add) show code that was ADDED
+- Lines without prefix (normal) show unchanged context
+
 Severity guidelines:
 - "warning": Medium severity issues (performance concerns, maintainability problems, potential bugs, deviation from best practices)
 - "error": High severity issues (security vulnerabilities, critical bugs, breaking changes, serious architectural problems)
 
 DO NOT include "info" severity comments. Only return comments that warrant immediate attention or improvement.
 
-Only return the JSON array, no additional text.`;
+Only return the JSON array, no additional text.
+
+For the "content" field:
+
+- ONLY add comments for actual issues that need to be addressed
+- DO NOT add comments for:
+  * Compliments or positive feedback
+  * Style preferences
+  * Minor suggestions
+  * Obvious changes
+  * General observations
+  * Ensuring/Confirming intended behavior
+- Each comment must be:
+  * Actionable (something specific that needs to change)
+  * Important enough to discuss
+  * Related to code quality, performance, or correctness
+- Other rules for "content" field:
+  * DO NOT comment on removed lines unless their removal creates a problem:
+    ** Focus your review on:
+      1. New code (lines with "+")
+      2. The impact of changes on existing code
+      3. Potential issues in the new implementation
+    ** For example:
+      - BAD: "This line was removed" (unless removal causes issues)
+      - GOOD: "The new implementation might cause X issue"
+      - GOOD: "Consider adding Y to the new code"
+
+Examples of NOT helpful comments:
+- "The changes may affect the overall layout and functionality on larger screens, so thorough testing is recommended to ensure no regressions occur."
+  Assume that the engineering team will perform UI tests, regression tests, feature tests, etc.
+- "Ensure that the new button section does not interfere with existing elements on larger screens. It may be useful to conduct a visual regression test."
+  Same reason as above.
+- "The change from avgCodes.value to avgCodes.value.toFixed(2) improves precision but may alter user expectations. Consider adding a note in the documentation or user interface to clarify this change."
+  Assume that changes like this are suggested by the product, design, and UX team.
+- "Removing the breadcrumb may hinder navigation. Consider discussing with the team if this is the desired user experience."
+  Same reason as above.
+- "Consider adding a comment explaining..."
+  The code should be self-explanatory.
+
+ABOVE anything else, DO NOT repeat the same comment multiple times. If a comment has already been made in the
+previous iteration, DO NOT repeat it.`;
+  }
+
+  /**
+   * Build the review prompt for the AI model
+   * @param {string} code - Code to review
+   * @param {string} context - Additional context
+   * @returns {string} - Formatted prompt
+   */
+  buildUserReviewPrompt(code, context) {
+    return `
+
+Code to review:
+\`\`\`
+${code}
+\`\`\`
+
+${context ? `Additional context: ${context}` : ''}
+`;
   }
 
   /**
    * Generate response from AI model
-   * @param {string} prompt - Prompt to send to AI
+   * @param {string} systemPrompt - System Prompt to send to AI
+   * @param {string} userPrompt - User Prompt to send to AI
    * @returns {Promise<string>} - AI response
    */
-  async generateResponse(prompt) {
+  async generateResponse(systemPrompt, userPrompt) {
     switch (this.provider) {
       case 'openai':
       case 'deepseek':
@@ -290,16 +439,16 @@ Only return the JSON array, no additional text.`;
       case 'moonshot':
       case 'upstage':
       case 'deepinfra':
-        return await this.generateOpenAIResponse(prompt);
+        return await this.generateOpenAIResponse(systemPrompt, userPrompt);
 
       case 'anthropic':
-        return await this.generateAnthropicResponse(prompt);
+        return await this.generateAnthropicResponse(systemPrompt, userPrompt);
 
       case 'google':
-        return await this.generateGoogleResponse(prompt);
+        return await this.generateGoogleResponse(systemPrompt, userPrompt);
 
       case 'mistral-ai':
-        return await this.generateMistralResponse(prompt);
+        return await this.generateMistralResponse(systemPrompt, userPrompt);
 
       default:
         throw new Error(`Unsupported provider: ${this.provider}`);
@@ -308,14 +457,18 @@ Only return the JSON array, no additional text.`;
 
   /**
    * Generate response using OpenAI-compatible API
-   * @param {string} prompt - Prompt to send
+   * @param {string} systemPrompt - System Prompt to send to AI
+   * @param {string} userPrompt - User Prompt to send to AI
    * @returns {Promise<string>} - AI response
    */
-  async generateOpenAIResponse(prompt) {
+  async generateOpenAIResponse(systemPrompt, userPrompt) {
     const response = await this.client.chat.completions.create({
       model: this.config.model || 'gpt-4',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.7
+      messages: [
+        { role: 'user', content: userPrompt },
+        { role: 'system', content: systemPrompt },
+      ],
+      temperature: 0.7,
     });
 
     return response.choices[0].message.content;
@@ -323,14 +476,18 @@ Only return the JSON array, no additional text.`;
 
   /**
    * Generate response using Anthropic API
-   * @param {string} prompt - Prompt to send
+   * @param {string} systemPrompt - System Prompt to send to AI
+   * @param {string} userPrompt - User Prompt to send to AI
    * @returns {Promise<string>} - AI response
    */
-  async generateAnthropicResponse(prompt) {
+  async generateAnthropicResponse(systemPrompt, userPrompt) {
     const response = await this.client.messages.create({
       model: this.config.model || 'claude-3-sonnet-20240229',
       temperature: 0.7,
-      messages: [{ role: 'user', content: prompt }]
+      messages: [
+        { role: 'user', content: userPrompt },
+        { role: 'system', content: systemPrompt },
+      ],
     });
 
     return response.content[0].text;
@@ -338,12 +495,13 @@ Only return the JSON array, no additional text.`;
 
   /**
    * Generate response using Google AI API
-   * @param {string} prompt - Prompt to send
+   * @param {string} systemPrompt - System Prompt to send to AI
+   * @param {string} userPrompt - User Prompt to send to AI
    * @returns {Promise<string>} - AI response
    */
-  async generateGoogleResponse(prompt) {
+  async generateGoogleResponse(systemPrompt, userPrompt) {
     const model = this.client.getGenerativeModel({
-      model: this.config.model || 'gemini-pro'
+      model: this.config.model || 'gemini-pro',
     });
 
     const result = await model.generateContent(prompt);
@@ -352,14 +510,18 @@ Only return the JSON array, no additional text.`;
 
   /**
    * Generate response using Mistral AI API
-   * @param {string} prompt - Prompt to send
+   * @param {string} systemPrompt - System Prompt to send to AI
+   * @param {string} userPrompt - User Prompt to send to AI
    * @returns {Promise<string>} - AI response
    */
-  async generateMistralResponse(prompt) {
+  async generateMistralResponse(systemPrompt, userPrompt) {
     const response = await this.client.chat.completions.create({
       model: this.config.model || 'mistral-large-latest',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.7
+      messages: [
+        { role: 'user', content: userPrompt },
+        { role: 'system', content: systemPrompt },
+      ],
+      temperature: 0.7,
     });
 
     return response.choices[0].message.content;
@@ -417,7 +579,7 @@ Only return the JSON array, no additional text.`;
         }
         return null;
       },
-      
+
       // Strategy 2: Try to fix common JSON issues and parse
       () => {
         let fixed = cleanResponse
@@ -425,32 +587,34 @@ Only return the JSON array, no additional text.`;
           .replace(/,\s*]/g, ']') // Remove trailing commas in arrays
           .replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":') // Quote unquoted keys
           .replace(/:\s*'([^']*)'/g, ': "$1"'); // Convert single quotes to double quotes
-        
+
         return JSON.parse(fixed);
       },
-      
+
       // Strategy 3: Try to extract individual JSON objects and combine them
       () => {
         const objectMatches = cleanResponse.match(/{[^{}]*}/g);
         if (objectMatches && objectMatches.length > 0) {
-          return objectMatches.map(match => {
-            try {
-              const obj = JSON.parse(match);
-              // Ensure required fields are present
-              return {
-                type: obj.type || 'general',
-                content: obj.content || 'No content provided',
-                severity: obj.severity || 'info',
-                line_number: obj.line_number || null,
-                suggestion: obj.suggestion || null
-              };
-            } catch {
-              return null;
-            }
-          }).filter(Boolean);
+          return objectMatches
+            .map((match) => {
+              try {
+                const obj = JSON.parse(match);
+                // Ensure required fields are present
+                return {
+                  type: obj.type || 'general',
+                  content: obj.content || 'No content provided',
+                  severity: obj.severity || 'info',
+                  line_number: obj.line_number || null,
+                  suggestion: obj.suggestion || null,
+                };
+              } catch {
+                return null;
+              }
+            })
+            .filter(Boolean);
         }
         return null;
-      }
+      },
     ];
 
     for (const strategy of strategies) {
@@ -487,19 +651,22 @@ Only return the JSON array, no additional text.`;
     // Split into paragraphs and filter out empty lines
     const paragraphs = truncatedResponse
       .split('\n')
-      .filter(line => line.trim().length > 0)
-      .map(line => line.trim());
+      .filter((line) => line.trim().length > 0)
+      .map((line) => line.trim());
 
-    const content = paragraphs.length > 0
-      ? `AI Review Feedback:\n\n${paragraphs.join('\n\n')}${truncated ? '\n\n[Response truncated]' : ''}`
-      : `AI Review Feedback:\n\n${truncatedResponse}${truncated ? '\n\n[Response truncated]' : ''}`;
+    const content =
+      paragraphs.length > 0
+        ? `AI Review Feedback:\n\n${paragraphs.join('\n\n')}${truncated ? '\n\n[Response truncated]' : ''}`
+        : `AI Review Feedback:\n\n${truncatedResponse}${truncated ? '\n\n[Response truncated]' : ''}`;
 
-    return [{
-      type: 'general',
-      content,
-      severity: 'info',
-      line_number: null
-    }];
+    return [
+      {
+        type: 'general',
+        content,
+        severity: 'info',
+        line_number: null,
+      },
+    ];
   }
 }
 

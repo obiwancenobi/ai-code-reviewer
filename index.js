@@ -59,7 +59,7 @@ program
         pull_request: {
           number: options.pr,
           title: `PR #${options.pr}`,
-          user: { login: 'CLI User' }
+          user: { login: 'BugBeaver' }
         },
         repository: {
           full_name: options.repo,
