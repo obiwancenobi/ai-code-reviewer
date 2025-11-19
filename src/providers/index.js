@@ -504,7 +504,7 @@ ${context ? `Additional context: ${context}` : ''}
       model: this.config.model || 'gemini-pro',
     });
 
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent(`${systemPrompt}\n\n${userPrompt}`);
     return result.response.text();
   }
 
