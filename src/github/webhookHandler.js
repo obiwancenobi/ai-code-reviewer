@@ -52,7 +52,7 @@ class WebhookHandler {
           title: pr.title,
           author: pr.user?.login || 'Unknown',
           reviewer: 'BugBeaver',
-          aiModel: `${this.config.ai.provider}|${this.config.ai.model}`
+          aiModel: `${this.config.ai.provider} | ${this.config.ai.model}`
         });
       }
 
@@ -68,7 +68,7 @@ class WebhookHandler {
           commentCount: result.comments || 0,  // ← Fixed: was result.comments?.length, should be result.comments (number)
           error: result.error,
           duration: result.duration,
-          aiModel: `${this.config.ai.provider}|${this.config.ai.model}`
+          aiModel: `${this.config.ai.provider} | ${this.config.ai.model}`
         });
       }
 

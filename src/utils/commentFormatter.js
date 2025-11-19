@@ -51,7 +51,8 @@ class CommentFormatter {
     // Add AI reviewer attribution
     const persona = config.ai?.persona || 'senior-engineer';
     const provider = config.ai?.provider || 'ai';
-    body += `\n\n---\n*Reviewed by 🦫 (${persona}) using ${provider}*`;
+    const model = config.ai?.model || '-';
+    body += `\n\n---\n*Reviewed by 🦫 (${persona}) using ${provider} | ${model}*`;
 
     return body;
   }
