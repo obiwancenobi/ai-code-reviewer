@@ -42,10 +42,23 @@ AI-powered code review automation for GitHub pull requests using configurable AI
 ### BugBeaver in Action
 
 **Inline Comments on Pull Requests:**
+- ***Flutter***
+
 ![AI Code Review Comments](screenshots/inline_comment_1.png)
+
 ![AI Code Review Comments](screenshots/inline_comment_2.png)
+
 ![AI Code Review Comments](screenshots/inline_comment_3.png)
+
 ![AI Code Review Comments](screenshots/inline_comment_4.png)
+
+- ***Typescript***
+
+![AI Code Review Comments](screenshots/inline_comment_5.png)
+
+![AI Code Review Comments](screenshots/inline_comment_6.png)
+
+![AI Code Review Comments](screenshots/inline_comment_7.png)
 
 **Discord Notifications:**
 ![Discord Notifications](screenshots/discord_notif.png)
