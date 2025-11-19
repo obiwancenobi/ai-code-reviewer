@@ -222,7 +222,7 @@ class WebhookHandler {
       const comment = generalComments[i];
       try {
         await this.githubClient.createIssueComment(owner, repo, pullNumber,
-          `**AI Review Comment** (${comment.path}${comment.line ? `:${comment.line}` : ''}):\n\n${comment.body}`);
+          `**🦫 BugBeaver Comment** (${comment.path}${comment.line ? `:${comment.line}` : ''}):\n\n${comment.body}`);
         postedCount++;
         logger.debug(`Posted general comment fallback ${postedCount}/${comments.length}`);
 
