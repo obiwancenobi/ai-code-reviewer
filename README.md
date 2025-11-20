@@ -1,4 +1,8 @@
+<div align="center">
+
 # BugBeaver Code Reviewer
+
+</div>
 
 <div align="center">
   <img src=".github/marketplace//bugbeaver.png" width="200" alt="BugBeaver Logo">
