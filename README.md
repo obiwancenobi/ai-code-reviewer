@@ -110,7 +110,7 @@ Add AI code review to any repository with one simple step:
 
        steps:
          - name: AI Code Review
-           uses: obiwancenobi/ai-code-reviewer@v1.0.20
+           uses: obiwancenobi/ai-code-reviewer@v1.0.21
            with:
              pr-number: ${{ github.event.pull_request.number }}
              repository: ${{ github.repository }}
@@ -146,7 +146,7 @@ Use repository variables for organization-wide settings:
 
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.20
+  uses: obiwancenobi/ai-code-reviewer@v1.0.21
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -492,7 +492,7 @@ Settings are applied in this priority order (highest to lowest):
 
 **Workflow sets:**
 ```yaml
-- uses: obiwancenobi/ai-code-reviewer@v1.0.20
+- uses: obiwancenobi/ai-code-reviewer@v1.0.21
   with:
     ai-provider: ${{ vars.AI_PROVIDER || 'anthropic' }}
     ai-model: ${{ vars.AI_MODEL || 'claude-3-sonnet' }}
@@ -572,7 +572,7 @@ jobs:
 
     steps:
       - name: AI Code Review
-        uses: obiwancenobi/ai-code-reviewer@v1.0.20
+        uses: obiwancenobi/ai-code-reviewer@v1.0.21
         with:
           pr-number: ${{ github.event.pull_request.number }}
           repository: ${{ github.repository }}
@@ -602,7 +602,7 @@ jobs:
 
     steps:
       - name: AI Code Review
-        uses: obiwancenobi/ai-code-reviewer@v1.0.20
+        uses: obiwancenobi/ai-code-reviewer@v1.0.21
         with:
           pr-number: ${{ github.event.pull_request.number }}
           repository: ${{ github.repository }}
@@ -615,7 +615,7 @@ jobs:
 #### Python Projects
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.20
+  uses: obiwancenobi/ai-code-reviewer@v1.0.21
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -628,7 +628,7 @@ jobs:
 #### Java/.NET Projects
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.20
+  uses: obiwancenobi/ai-code-reviewer@v1.0.21
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
@@ -650,7 +650,7 @@ Set these in repository Settings → Actions → Variables:
 
 ```yaml
 - name: AI Code Review
-  uses: obiwancenobi/ai-code-reviewer@v1.0.20
+  uses: obiwancenobi/ai-code-reviewer@v1.0.21
   with:
     pr-number: ${{ github.event.pull_request.number }}
     repository: ${{ github.repository }}
