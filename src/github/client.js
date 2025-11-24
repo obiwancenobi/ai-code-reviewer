@@ -12,7 +12,7 @@ class GitHubClient {
       auth: token,
       userAgent: 'ai-code-reviewer'
     });
-    this.author = author || 'github-actions[bot]';
+    this.author = author || 'BugBeaver';
   }
 
   /**

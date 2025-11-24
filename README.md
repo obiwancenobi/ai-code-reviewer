@@ -190,7 +190,8 @@ Use repository variables for organization-wide settings:
       ".next/**",
       ".nuxt/**"
     ]
-  }
+  },
+  "author": "BugBeaver"
 }
 ```
 
@@ -387,14 +388,23 @@ You can define custom reviewer personas with your own prompts:
 
 ### Comment Attribution
 
-AI review comments appear with the GitHub Actions bot identity and include AI model information. The author attribution is automatically handled by GitHub based on the token used for authentication.
+AI review comments now appear with "BugBeaver" branding instead of generic "github-actions[bot]" for better identification. The author attribution includes AI model information:
 
 **Example comment attribution:**
 ```
-*Reviewed by 🦫 (senior-engineer) using openai/gpt-4*
+*Reviewed by 🦫 (senior-engineer) using openai | gpt-4*
 ```
 
-**Note:** The `author` configuration option was removed as GitHub's API doesn't support custom author association for review comments. Comments will appear as coming from the authenticated user/bot associated with the `GITHUB_TOKEN`.
+**Custom Author Name:**
+You can customize the reviewer name in your configuration:
+
+```json
+{
+  "author": "Your Company AI Reviewer"
+}
+```
+
+This provides better branding and professional appearance while maintaining full customization options.
 
 ## 🔧 CLI Usage
 
@@ -442,7 +452,7 @@ The system automatically excludes common build artifacts and dependencies:
 3. **File Analysis**: System identifies changed files, applies comprehensive exclusion filters
 4. **AI Processing**: Code is chunked if needed and sent to configured AI model
 5. **Review Generation**: AI analyzes code using specified persona and generates comments
-6. **Comment Posting**: Inline and general comments posted to GitHub PR with AI model attribution
+6. **Comment Posting**: Inline and general comments posted to GitHub PR with BugBeaver branding
 7. **Notification**: Discord webhook sends status updates with AI model information (if configured)
 
 ## 🔧 Action Inputs
@@ -455,6 +465,7 @@ The system automatically excludes common build artifacts and dependencies:
 | `ai-provider` | No | `openai` | AI provider (openai, anthropic, google, etc.) |
 | `ai-model` | No | `gpt-4` | AI model to use |
 | `ai-persona` | No | `senior-engineer` | Reviewer persona |
+| `author` | No | `BugBeaver` | Custom reviewer name for comments |
 
 ## 🔑 Required Secrets
 
@@ -675,7 +686,8 @@ Create `ai-review-config.json` in your repository:
     "excludePatterns": [
       "custom-exclude/**"
     ]
-  }
+  },
+  "author": "BugBeaver"
 }
 ```
 

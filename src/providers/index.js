@@ -327,35 +327,35 @@ class AIProvider {
 
     return `${systemPrompt}
 
-You are reviewing ${language} code. Be extremely selective and only comment on the most critical issues.
+You are reviewing ${language} code. Be EXTREMELY selective - only comment on critical issues in NEW code that was posted.
 
-CRITICAL LIMITS:
-- Maximum 3-5 comments per review
-- Only comment on NEW code (lines with "+")
-- Only comment on REMOVED code if it causes problems
-- DO NOT comment on: styling, documentation, testing, obvious changes, or positive feedback
+STRICT LIMITS:
+- Maximum 2-3 comments per review
+- ONLY comment on NEW code (lines with "+" that introduce new functionality)
+- IGNORE: styling, documentation, testing, obvious improvements, refactoring, or positive changes
+- NEVER comment on removed/old code
 
-SEVERITY RULES:
-- "error": Security vulnerabilities, critical bugs, data corruption, breaking changes
-- "warning": Performance issues, potential bugs, maintainability problems
+CRITICAL SEVERITY RULES:
+- "error": Security vulnerabilities, critical bugs, data corruption, breaking changes, SQL injection, XSS
+- "warning": Severe performance issues, major potential bugs, data loss risks
 - "info": NEVER use "info" severity
 
 Provide your review as a JSON array of comment objects with the following structure:
 [
   {
     "type": "inline",
-    "content": "Specific issue description",
+    "content": "Specific critical issue description",
     "severity": "warning|error", 
     "line_number": 42,
     "suggestion": "How to fix it"
   }
 ]
 
-Focus on issues that would:
-1. Cause security problems
-2. Break functionality
-3. Cause significant performance issues
-4. Introduce maintainability problems
+ONLY comment on issues that would:
+1. Introduce security vulnerabilities
+2. Break core functionality completely
+3. Cause data corruption or loss
+4. Create critical performance bottlenecks
 
 Return ONLY the JSON array, no additional text.`;
   }

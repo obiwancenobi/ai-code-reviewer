@@ -19,6 +19,12 @@ class ReviewConfig {
       },
       notifications: {
         discordWebhookUrl: { type: 'string', required: false, format: 'url' }
+      },
+      author: {
+        type: 'string',
+        required: false,
+        default: 'BugBeaver',
+        description: 'Name to use for GitHub review comments and commits'
       }
     };
   }
@@ -105,7 +111,8 @@ class ReviewConfig {
           'coverage/**'
         ]
       },
-      notifications: {}
+      notifications: {},
+      author: 'BugBeaver'
     };
   }
 
@@ -120,7 +127,8 @@ class ReviewConfig {
     return {
       ai: { ...defaults.ai, ...(config.ai || {}) },
       processing: { ...defaults.processing, ...(config.processing || {}) },
-      notifications: { ...defaults.notifications, ...(config.notifications || {}) }
+      notifications: { ...defaults.notifications, ...(config.notifications || {}) },
+      author: config.author || defaults.author
     };
   }
 
