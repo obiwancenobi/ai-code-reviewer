@@ -289,10 +289,6 @@ The system automatically filters out:
 - **Emoji Indicators**: Clear visual hierarchy with emojis
 - **Priority Sorting**: Critical issues (errors) appear first
 
-**Before vs After:**
-- **Before**: 20-50+ comments with noise and repetition
-- **After**: 3-10 focused, actionable comments with visual formatting
-
 **Provider-specific examples:**
 
 **Anthropic Claude:**

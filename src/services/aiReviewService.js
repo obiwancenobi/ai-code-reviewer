@@ -4,6 +4,8 @@
 
 const AIProvider = require('../providers/index');
 const fileProcessor = require('../utils/fileProcessor');
+const fileChunker = require('../utils/fileChunker');
+const patchParser = require('../utils/patchParser');
 const logger = require('../utils/logger');
 const errorHandler = require('../utils/errorHandler');
 const CommentFormatter = require('../utils/commentFormatter');
@@ -129,13 +131,29 @@ class AIReviewService {
     try {
       logger.debug(`Reviewing file: ${file.filename}`);
 
+      // Initialize patch parser and file chunker
+      const parser = new patchParser();
+      const chunker = new fileChunker(this.config);
+
       // Get file content (for added/modified files)
       let content = '';
+      let isPatchContent = false;
+      
       if (file.status !== 'removed') {
         try {
-          // In a real implementation, this would get content from GitHub API
-          // For now, we'll use patch content or skip
-          content = file.patch || '';
+          // Check if we have patch content vs full content
+          if (file.patch && file.patch.trim()) {
+            content = file.patch;
+            isPatchContent = true;
+            logger.debug(`Using patch content for ${file.filename}`);
+          } else {
+            // Fallback to full content if available
+            content = file.content || '';
+            isPatchContent = false;
+            if (content) {
+              logger.debug(`Using full content for ${file.filename}`);
+            }
+          }
         } catch (error) {
           logger.warn(`Could not get content for ${file.filename}:`, error.message);
         }
@@ -146,22 +164,89 @@ class AIReviewService {
         return result;
       }
 
-      // Split large files into chunks
-      const chunks = fileProcessor.splitIntoChunks(content, this.config.processing.chunkSize);
+      let processedContent = content;
+      let originalLineCount = 0;
 
-      // Review each chunk
-      for (let i = 0; i < chunks.length; i++) {
-        const chunk = chunks[i];
-        const chunkComments = await this.reviewCodeChunk(chunk, file, prDetails, i, chunks.length);
+      if (isPatchContent) {
+        // Parse patch content and extract reviewable content
+        const parsedPatch = parser.parsePatch(content);
+        
+        if (!parsedPatch.hasContent || parsedPatch.hunks.length === 0) {
+          logger.debug(`Invalid patch content for ${file.filename}, skipping`);
+          return result;
+        }
 
-        // Adjust line numbers for chunked content
-        const adjustedComments = chunkComments.map(comment => ({
-          ...comment,
-          line_number: comment.line_number ? comment.line_number + (i * Math.floor(content.split('\n').length / chunks.length)) : null
-        }));
+        // Extract meaningful content for AI review
+        processedContent = parser.extractReviewContent(parsedPatch, {
+          includeContext: true,
+          maxLines: 1000
+        });
 
-        result.comments.push(...adjustedComments);
+        originalLineCount = parsedPatch.originalLineCount;
+
+        logger.debug(`Parsed patch for ${file.filename}: ${parsedPatch.hunks.length} hunks, ${originalLineCount} original lines`);
+
+        // Split into chunks using FileChunker with line tracking
+        const chunks = chunker.chunkFile(processedContent, {
+          maxChunkSize: this.config.processing.chunkSize,
+          overlap: 1000
+        });
+
+        // Review each chunk
+        for (let i = 0; i < chunks.length; i++) {
+          const chunk = chunks[i];
+          const chunkComments = await this.reviewCodeChunk(chunk.content, file, prDetails, i, chunks.length);
+
+          // Use FileChunker's line number adjustment
+          const adjustedComments = chunker.adjustCommentLineNumbers(
+            chunkComments,
+            chunk,
+            originalLineCount
+          );
+
+          // For patch content, map line numbers from patch to original file
+          const mappedComments = adjustedComments.map(comment => {
+            if (comment.line_number && parsedPatch) {
+              const originalLineNumber = parser.mapPatchLineToOriginalFile(comment.line_number, parsedPatch);
+              if (originalLineNumber) {
+                return {
+                  ...comment,
+                  line_number: originalLineNumber
+                };
+              }
+            }
+            return comment;
+          });
+
+          result.comments.push(...mappedComments);
+        }
+
+      } else {
+        // Handle full file content using FileChunker
+        originalLineCount = content.split('\n').length;
+
+        const chunks = chunker.chunkFile(content, {
+          maxChunkSize: this.config.processing.chunkSize,
+          overlap: 1000
+        });
+
+        // Review each chunk
+        for (let i = 0; i < chunks.length; i++) {
+          const chunk = chunks[i];
+          const chunkComments = await this.reviewCodeChunk(chunk.content, file, prDetails, i, chunks.length);
+
+          // Use FileChunker's line number adjustment
+          const adjustedComments = chunker.adjustCommentLineNumbers(
+            chunkComments,
+            chunk,
+            originalLineCount
+          );
+
+          result.comments.push(...adjustedComments);
+        }
       }
+
+      logger.debug(`File ${file.filename}: ${result.comments.length} comments generated`);
 
     } catch (error) {
       logger.error(`Failed to review file ${file.filename}:`, error.message);
@@ -182,10 +267,14 @@ class AIReviewService {
    */
   async reviewCodeChunk(code, file, prDetails, chunkIndex, totalChunks) {
     logger.info(`Routing review for ${file.filename} to ${this.aiProvider.provider} with model ${this.config.ai.model}`);
+    
+    // Enhanced context including chunk metadata
     const context = `File: ${file.filename}
 Status: ${file.status}
 Changes: +${file.additions} -${file.deletions}
-Chunk: ${chunkIndex + 1}/${totalChunks}`;
+Language: ${file.language}
+Chunk: ${chunkIndex + 1}/${totalChunks}
+Lines: ${code.split('\n').length}`;
 
     const comments = await this.aiProvider.reviewCode(
       code,
@@ -195,16 +284,41 @@ Chunk: ${chunkIndex + 1}/${totalChunks}`;
     );
 
     // Convert AI comments to GitHub review format
+    // Let GitHubClient handle validation and fallback to general comments
     return comments
-      .filter(comment => comment.line_number && comment.line_number > 0) // Filter out invalid line numbers
-      .map(comment => ({
-        path: file.filename,
-        line: comment.line_number,
-        body: this.formatCommentBody(comment),
-        commitId: prDetails.head?.sha, // Will be overridden by GitHubClient
-        severity: comment.severity,
-        type: comment.type
-      }));
+      .filter(comment => comment.line_number && comment.line_number > 0) // Filter out clearly invalid line numbers only
+      .map(comment => {
+        // Only do basic validation, let GitHub API handle the rest
+        const finalLineNumber = this.getFinalLineNumber(comment.line_number, code.split('\n').length);
+        
+        return {
+          path: file.filename,
+          line: finalLineNumber, // May be invalid, GitHubClient will handle fallback
+          body: this.formatCommentBody(comment),
+          commitId: prDetails.head?.sha,
+          severity: comment.severity,
+          type: comment.type,
+          originalLineNumber: comment.line_number // Keep original for debugging
+        };
+      });
+  }
+
+  /**
+   * Get final line number for comment, with basic validation
+   * Let GitHubClient handle the actual validation and fallback logic
+   * @param {number} lineNumber - Proposed line number
+   * @param {number} chunkLineCount - Lines in the chunk being reviewed
+   * @returns {number} - Line number (may be invalid, GitHubClient will handle)
+   */
+  getFinalLineNumber(lineNumber, chunkLineCount) {
+    // Basic sanity check - only reject obviously invalid numbers
+    if (!lineNumber || lineNumber <= 0 || lineNumber > chunkLineCount * 10) {
+      // Return 1 as fallback so GitHubClient can handle the proper fallback
+      logger.debug(`Line number ${lineNumber} seems invalid for chunk size ${chunkLineCount}, using fallback`);
+      return 1;
+    }
+
+    return lineNumber;
   }
 
   /**
